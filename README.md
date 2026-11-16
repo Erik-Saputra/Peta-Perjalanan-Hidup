@@ -26,8 +26,6 @@ Untuk GitHub Pages: buka Settings → Pages, pilih branch `main` dan folder `/ (
 
 | File | Keterangan |
 |---|---|
-| File | Keterangan |
-|---|---|
 | `index.html` | Kerangka halaman dan seluruh markup. |
 | `css/style.css` | Semua gaya, termasuk warna tema terang dan gelap. |
 | `js/app.js` | Aplikasi utama: data perjalanan, peta datar, bola dunia, linimasa, dan formulir. |
