@@ -8,6 +8,10 @@ Tandai kota tempat kamu lahir, sekolah, kuliah, bekerja, dan tinggal. Halaman in
 - Bola dunia yang bisa diputar, dengan pilihan peta datar.
 - Pemutaran perjalanan dari kota ke kota dan penggeser tahun.
 - Total jarak, perbandingan dengan Sabang–Merauke dan keliling bumi, tempat terlama, perpindahan terjauh, dan titik "pusat hidup".
+- Liburan (digambar sebagai garis pulang-pergi dari tempat tinggal saat itu) dan tempat impian (garis titik-titik).
+- Julukan otomatis dari pola perpindahan, misalnya "Perantau Lintas Pulau".
+- Fakta tambahan: berapa kali melintasi khatulistiwa, jumlah pulau, dan jumlah zona waktu.
+- Bandingkan dengan teman lewat kode atau link, tanpa server: kedua rute tampil di peta yang sama, lengkap dengan kota tempat kalian pernah sekota.
 - Kartu ringkasan berbentuk gambar.
 
 Data perjalanan hanya disimpan di browser pengguna (`localStorage`). Tidak ada server dan tidak ada database.
@@ -31,12 +35,16 @@ Untuk GitHub Pages: buka Settings → Pages, pilih branch `main` dan folder `/ (
 | `js/app.js` | Aplikasi utama: data perjalanan, peta datar, bola dunia, linimasa, dan formulir. |
 | `js/kota.js` | Daftar kota bawaan, pemuatan kota dunia, dan pencarian. |
 | `js/statistik.js` | Hitungan angka perjalanan (lama tinggal, total, pusat hidup). |
+| `js/fakta.js` | Julukan perjalanan dan fakta tambahan (khatulistiwa, pulau, zona waktu). |
+| `js/bandingkan.js` | Kode perjalanan untuk dikirim ke teman, dan perbandingan dua perjalanan. |
 | `js/kartu.js` | Penggambar kartu ringkasan. |
 | `js/geo.js` | Helper jarak, format angka, dan koordinat. |
-| `data/kota-dunia.txt` | Data kota. Satu baris per tempat: `nama\|kode negara\|kode provinsi\|lintang\|bujur`, diurutkan dari penduduk terbanyak. |
-| `peta-perjalanan-hidup.html` | Markup yang sama tanpa kerangka `<html>`, dipakai untuk Artifact di claude.ai. |
+| `data/kota-dunia.txt` | Data kota. Baris pertama daftar zona waktu, lalu satu baris per tempat: `nama\|kode negara\|kode provinsi\|lintang\|bujur\|indeks zona waktu`, diurutkan dari penduduk terbanyak. |
+| `peta-perjalanan-hidup.html` | Markup yang sama tanpa kerangka `<html>`, dipakai untuk Artifact di claude.ai. Dibuat otomatis, jangan diedit langsung. |
+| `tools/buat-artifact.js` | Membuat `peta-perjalanan-hidup.html` dari `index.html`. |
+| `tools/buat-data-kota.js` | Membuat `data/kota-dunia.txt` dari berkas GeoNames `cities1000.txt`. |
 
-File JavaScript memakai modul ES (`import`/`export`) tanpa proses build. `index.html` dan `peta-perjalanan-hidup.html` berisi markup yang sama; kalau salah satunya diubah, yang lain perlu disamakan.
+File JavaScript memakai modul ES (`import`/`export`) tanpa proses build. Setelah mengubah `index.html`, jalankan `node tools/buat-artifact.js` supaya halaman Artifact ikut sama.
 
 ## Sumber data dan pustaka
 

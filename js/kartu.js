@@ -11,7 +11,7 @@ export function drawCard(o) {
   var disp = '"Bricolage Grotesque", "Trebuchet MS", sans-serif', body = '"Instrument Sans", "Segoe UI", sans-serif', mono = '"JetBrains Mono", Consolas, monospace';
   ctx.fillStyle = '#0D171A'; ctx.fillRect(0, 0, CW, CH);
   ctx.textBaseline = 'alphabetic';
-  ctx.fillStyle = '#93A7AD'; ctx.font = '500 26px ' + mono; ctx.fillText('PETA PERJALANAN HIDUP', 60, 96);
+  ctx.fillStyle = '#93A7AD'; ctx.font = '500 26px ' + mono; ctx.fillText('PETA PERJALANAN HIDUP' + (o.nick ? '  ·  ' + o.nick.toUpperCase() : ''), 60, 96, CW - 120);
   ctx.fillStyle = '#E8F0F1'; ctx.font = '700 68px ' + disp;
   ctx.fillText(state.owner ? state.owner : 'Perjalanan hidupku', 60, 176, CW - 120);
 

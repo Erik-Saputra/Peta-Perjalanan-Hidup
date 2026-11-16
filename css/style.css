@@ -171,3 +171,32 @@ dialog img { width: 100%; height: auto; border-radius: 10px; display: block; bac
 .dlgrow { display: flex; flex-wrap: wrap; gap: 8px; justify-content: space-between; align-items: center; }
 #copyBox { width: 100%; min-height: 70px; font: inherit; font-size: 13px; border: 1px solid var(--line); border-radius: 8px; background: var(--bg); color: var(--ink); padding: 8px; }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+
+/* ---------- Liburan, tempat impian, dan perbandingan dengan teman ---------- */
+:root { --c-liburan: #0B93A6; --c-impian: #6B7C83; --friend: #14252B; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { --c-liburan: #45D0DD; --c-impian: #9FB1B7; --friend: #E8F0F1; }
+}
+:root[data-theme="dark"] { --c-liburan: #45D0DD; --c-impian: #9FB1B7; --friend: #E8F0F1; }
+.bg-liburan { background: var(--c-liburan); }
+.bg-impian, .dot-impian { background: transparent; border: 2px dashed var(--c-impian); }
+.chip-sm { width: 14px; height: 14px; margin: 6px; }
+.trip { fill: none; stroke: var(--c-liburan); stroke-linecap: round; }
+.tripdot { fill: var(--c-liburan); stroke: var(--surface); }
+.dream { fill: none; stroke: var(--c-impian); stroke-linecap: round; }
+.dreamdot { fill: var(--surface); stroke: var(--c-impian); }
+.froute { fill: none; stroke: var(--friend); opacity: 0.75; stroke-linecap: round; }
+.fdot { fill: var(--friend); stroke: var(--surface); }
+.meet { fill: none; stroke: var(--route); }
+.mlabel.tlabel { fill: var(--c-liburan); }
+.mlabel.dlabel { fill: var(--c-impian); font-style: italic; }
+.mlabel.flabel { fill: var(--friend); }
+.subhead { margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--line); font-family: var(--f-mono); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+.nickbox { flex: 1 1 220px; min-width: 0; }
+.nick { font-family: var(--f-display); font-weight: 700; font-size: clamp(22px, 4vw, 32px); line-height: 1.1; text-wrap: balance; }
+.btnrow { display: flex; flex-wrap: wrap; gap: 8px; }
+.friendon { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 10px; border: 1px dashed var(--line); border-radius: 8px; padding: 6px 10px; font-size: 13px; }
+.codebox { width: 100%; min-height: 70px; font: inherit; font-size: 12px; border: 1px solid var(--line); border-radius: 8px; background: var(--bg); color: var(--ink); padding: 8px; overflow-wrap: anywhere; }
+.cmpbox { display: flex; flex-direction: column; gap: 10px; }
+.cmp.cmp-friend { border-top: 0; padding-top: 0; }
+.field input:disabled { opacity: 0.5; }

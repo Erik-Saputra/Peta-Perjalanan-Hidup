@@ -54,6 +54,8 @@
         <span><i class="dot bg-kuliah"></i>Kuliah</span>
         <span><i class="dot bg-kerja"></i>Kerja</span>
         <span><i class="dot bg-tinggal"></i>Tinggal</span>
+        <span><i class="dot bg-liburan"></i>Liburan</span>
+        <span><i class="dot dot-impian"></i>Impian</span>
       </div>
       <p class="maptip">Seret untuk memutar bola dunia atau menggeser peta. Perbesar dengan tombol + dan &minus; atau Ctrl + scroll. Klik nama tempat di daftar untuk mendekat ke sana.</p>
     </section>
@@ -78,10 +80,12 @@
               <option value="kuliah">Kuliah</option>
               <option value="kerja">Kerja</option>
               <option value="tinggal">Tinggal</option>
+              <option value="liburan">Liburan</option>
+              <option value="impian">Impian (belum tercapai)</option>
             </select>
           </div>
           <div class="field">
-            <label for="yearInput">Sejak tahun</label>
+            <label for="yearInput" id="yearLabel">Sejak tahun</label>
             <input id="yearInput" type="number" inputmode="numeric" min="1900" max="2100" placeholder="2015">
           </div>
         </div>
@@ -101,6 +105,32 @@
         <ol class="itin" id="itin"></ol>
         <p class="empty" id="emptyMsg" hidden>Belum ada tempat. Mulai dari kota kelahiranmu, lalu tambahkan tempat berikutnya sesuai tahun.</p>
       </section>
+
+      <section class="panel" aria-label="Bandingkan perjalanan">
+        <h2>Bandingkan dengan teman</h2>
+        <p class="foot">Kirim kode perjalananmu ke teman atau pasangan, lalu tempel kode mereka di sini. Kedua rute tampil di peta yang sama. Catatan pribadimu tidak ikut terkirim.</p>
+        <div class="field">
+          <label for="nameInput">Namamu</label>
+          <input id="nameInput" type="text" maxlength="28" placeholder="Nama yang dilihat temanmu">
+        </div>
+        <div class="btnrow">
+          <button class="btn btn-sm" type="button" id="btnCopyCode">Salin kode perjalananku</button>
+          <button class="btn btn-sm" type="button" id="btnCopyLink">Salin link</button>
+        </div>
+        <div class="field">
+          <label for="friendInput">Kode atau link dari teman</label>
+          <input id="friendInput" type="text" placeholder="Tempel di sini">
+        </div>
+        <div class="btnrow">
+          <button class="btn btn-sm btn-primary" type="button" id="btnCompare">Bandingkan</button>
+        </div>
+        <div class="friendon" id="friendOn" hidden>
+          <span>Membandingkan dengan <b id="friendName"></b></span>
+          <button class="btn btn-sm btn-ghost" type="button" id="btnUncompare">Lepas</button>
+        </div>
+        <div class="foot" id="codeMsg" role="status"></div>
+        <textarea id="codeBox" class="codebox" readonly hidden aria-label="Kode perjalanan"></textarea>
+      </section>
     </aside>
   </div>
 
@@ -110,9 +140,18 @@
         <p class="eyebrow">Total jarak perpindahan</p>
         <div class="big"><span id="totalKm">0</span><small>km</small></div>
       </div>
+      <div class="nickbox" id="nickBox" hidden>
+        <p class="eyebrow">Julukanmu</p>
+        <div class="nick" id="nick"></div>
+        <p class="foot" id="nickWhy"></p>
+      </div>
       <button class="btn btn-primary" id="btnCard" type="button">Buat kartu ringkasan</button>
     </div>
     <ul class="cmp" id="cmp"></ul>
+    <div class="cmpbox" id="cmpBox" hidden>
+      <h2 id="cmpTitle">Kamu dan teman</h2>
+      <ul class="cmp cmp-friend" id="cmpList"></ul>
+    </div>
     <dl class="facts" id="facts"></dl>
     <p class="foot">Jarak dihitung sebagai garis lurus di permukaan bumi antara dua tempat yang berurutan, bukan jarak jalan. Data tempatmu hanya disimpan di browser ini. Nama dan koordinat kota dari <a href="https://www.geonames.org/" style="color: inherit">GeoNames</a> (CC BY 4.0); garis daratan dari Natural Earth.</p>
   </section>

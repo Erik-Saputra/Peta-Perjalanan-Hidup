@@ -62,16 +62,19 @@ CITIES.forEach(function (c) { (builtIn[c.key] = builtIn[c.key] || []).push(c); }
 var loadWorld = function (onDone) {
   if (!window.fetch) return onDone(false);
   fetch('data/kota-dunia.txt').then(function (r) { if (!r.ok) throw new Error('gagal'); return r.text(); }).then(function (txt) {
-    var lines = txt.split('\n'), out = [];
+    var lines = txt.split('\n'), out = [], tzLat = [], tzLon = [], tzIdx = [];
     for (var i = 0; i < lines.length; i++) {
       var a = lines[i].split('|');
+      if (a[0] === '#tz') { TZ_NAMES = a.slice(1); continue; }
       if (a.length < 5) continue;
       var c = { name: a[0], cc: a[1], a1: a[2], lat: +a[3], lon: +a[4], key: norm(a[0]) };
       if (!c.key || !isFinite(c.lat) || !isFinite(c.lon)) continue;
+      if (a[5]) { tzLat.push(c.lat); tzLon.push(c.lon); tzIdx.push(+a[5]); }
       var same = builtIn[c.key];
       if (same && same.some(function (b) { return Math.abs(b.lat - c.lat) < 0.4 && Math.abs(b.lon - c.lon) < 0.4; })) continue;
       out.push(c);
     }
+    TZ_PTS = { lat: tzLat, lon: tzLon, idx: tzIdx };
     WORLD = out; onDone(out.length > 0);
   }).catch(function () { onDone(false); });
 };
@@ -92,4 +95,22 @@ var searchCities = function (q, limit) {
 };
 
 function worldCount() { return WORLD.length; }
-export { CITIES, NEGARA, A3, norm, placeLabel, loadWorld, cityByName, searchCities, worldCount };
+
+// Zona waktu sebuah titik = zona waktu kota terdekat di data GeoNames. Mengembalikan null sebelum data termuat.
+var TZ_NAMES = [], TZ_PTS = null, tzCache = {};
+function tzNear(lat, lon) {
+  if (!TZ_PTS || !TZ_NAMES.length) return null;
+  var k = lat.toFixed(2) + ',' + lon.toFixed(2);
+  if (k in tzCache) return tzCache[k];
+  var best = -1, bd = Infinity, cl = Math.cos(lat * Math.PI / 180), la = TZ_PTS.lat, lo = TZ_PTS.lon;
+  for (var i = 0; i < la.length; i++) {
+    var dy = la[i] - lat, dx = lo[i] - lon;
+    if (dx > 180) dx -= 360; else if (dx < -180) dx += 360;
+    dx *= cl;
+    var d = dx * dx + dy * dy;
+    if (d < bd) { bd = d; best = i; }
+  }
+  return (tzCache[k] = best >= 0 ? (TZ_NAMES[TZ_PTS.idx[best]] || null) : null);
+}
+
+export { CITIES, NEGARA, A3, norm, placeLabel, loadWorld, cityByName, searchCities, worldCount, tzNear };

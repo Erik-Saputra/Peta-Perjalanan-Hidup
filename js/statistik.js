@@ -26,6 +26,13 @@ export function lifeCenter(S, now) {
   return c;
 }
 
+// Tempat tinggal pada tahun tertentu (tempat pertama kalau tahunnya lebih awal dari semuanya).
+export function homeAt(S, year) {
+  var r = S.length ? S[0] : null;
+  S.forEach(function (p) { if (p.year <= year) r = p; });
+  return r;
+}
+
 export function totals(S, legs, now) {
   var total = d3.sum(legs, function (l) { return l.km; });
   var cities = new Set(S.map(function (p) { return p.lat.toFixed(2) + ',' + p.lon.toFixed(2); })).size;
