@@ -1,0 +1,1116 @@
+<title>Peta Perjalanan Hidup</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@500;700&display=swap">
+<style>
+/* Tata letak: peta besar sebagai panggung, rute hidup di sampingnya seperti lembar itinerary, angka jarak di bawah seperti odometer. */
+:root {
+  --bg: #EDF1F2;
+  --surface: #FFFFFF;
+  --ink: #14252B;
+  --muted: #586C73;
+  --line: #D2DBDE;
+  --sea: #DBE6E9;
+  --land: #FAFCFB;
+  --land-visited: #F0D9A0;
+  --geo-line: #B4C2C6;
+  --route: #D4285A;
+  --space: #F6F9FA; --sea-hi: #EEF5F7; --sea-lo: #BFD5DB; --halo: rgba(14,107,116,0.22); --halo-0: rgba(14,107,116,0); --limb: rgba(20,60,70,0.22); --flow: #FFFFFF;
+  --accent: #0E6B74;
+  --on-accent: #FFFFFF;
+  --danger: #B3261E;
+  --c-lahir: #D99A00;
+  --c-sekolah: #2F7DD1;
+  --c-kuliah: #7A54C7;
+  --c-kerja: #1B9565;
+  --c-tinggal: #DD622A;
+  --f-display: "Bricolage Grotesque", "Trebuchet MS", "Segoe UI", sans-serif;
+  --f-body: "Instrument Sans", "Segoe UI", system-ui, sans-serif;
+  --f-mono: "JetBrains Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0D171A; --surface: #152226; --ink: #E8F0F1; --muted: #93A7AD; --line: #27393E;
+    --sea: #0F1E22; --land: #35525A; --land-visited: #8A7A2E; --geo-line: #567179;
+    --space: #070E11; --sea-hi: #1F4852; --sea-lo: #0C1E23; --halo: rgba(79,195,204,0.30); --halo-0: rgba(79,195,204,0); --limb: rgba(0,0,0,0.3); --flow: #FFFFFF;
+    --route: #FF5C8A; --accent: #4FC3CC; --on-accent: #06262A; --danger: #FF8A80;
+    --c-lahir: #F2BE3A; --c-sekolah: #62A8F2; --c-kuliah: #A98BEB; --c-kerja: #4DCB96; --c-tinggal: #F28B55;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0D171A; --surface: #152226; --ink: #E8F0F1; --muted: #93A7AD; --line: #27393E;
+  --sea: #0F1E22; --land: #35525A; --land-visited: #8A7A2E; --geo-line: #567179;
+    --space: #070E11; --sea-hi: #1F4852; --sea-lo: #0C1E23; --halo: rgba(79,195,204,0.30); --halo-0: rgba(79,195,204,0); --limb: rgba(0,0,0,0.3); --flow: #FFFFFF;
+  --route: #FF5C8A; --accent: #4FC3CC; --on-accent: #06262A; --danger: #FF8A80;
+  --c-lahir: #F2BE3A; --c-sekolah: #62A8F2; --c-kuliah: #A98BEB; --c-kerja: #4DCB96; --c-tinggal: #F28B55;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font-family: var(--f-body); font-size: 15px; line-height: 1.5; }
+.wrap { max-width: 1180px; margin: 0 auto; padding-block: 28px 48px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); display: flex; flex-direction: column; gap: 20px; }
+h1, h2, h3 { font-family: var(--f-display); margin: 0; text-wrap: balance; line-height: 1.1; }
+h1 { font-size: clamp(30px, 5vw, 46px); font-weight: 700; letter-spacing: -0.02em; }
+h2 { font-size: 20px; font-weight: 700; }
+p { margin: 0; }
+.lede { color: var(--muted); max-width: 62ch; margin-top: 8px; }
+.eyebrow { font-family: var(--f-mono); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+button, input, select { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.btn { border: 1px solid var(--line); background: var(--surface); border-radius: 8px; padding: 8px 14px; font-weight: 500; cursor: pointer; }
+.btn:hover { border-color: var(--accent); }
+.btn-primary { background: var(--accent); border-color: var(--accent); color: var(--on-accent); font-weight: 600; }
+.btn-primary:hover { filter: brightness(1.08); }
+.btn-ghost { background: transparent; }
+.btn-danger { color: var(--danger); }
+.btn-sm { padding: 5px 10px; font-size: 13px; }
+
+.banner { display: flex; flex-wrap: wrap; gap: 10px 16px; align-items: center; justify-content: space-between; border: 1px dashed var(--route); border-radius: 10px; padding: 10px 14px; }
+.banner p { min-width: 0; flex: 1 1 280px; }
+.banner strong { color: var(--route); }
+
+.grid { display: grid; grid-template-columns: minmax(0, 1fr) 360px; gap: 20px; align-items: start; }
+@media (max-width: 940px) { .grid { grid-template-columns: minmax(0, 1fr); } }
+
+.mapcard { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; min-width: 0; }
+.mapbox { position: relative; background: var(--sea); }
+#map { display: block; position: relative; width: 100%; height: auto; touch-action: pan-y; cursor: grab; background: var(--sea); }
+#map.picking { cursor: crosshair; }
+.mapbox.globe { background: var(--space); }
+.mapbox.globe #map { background: transparent; }
+#globe { position: absolute; inset: 0; width: 100%; height: 100%; }
+.route { filter: drop-shadow(0 0 3px var(--route)); }
+.flow { fill: none; stroke: var(--flow); stroke-linecap: round; opacity: 0.9; animation: flow 1.1s linear infinite; pointer-events: none; }
+@keyframes flow { to { stroke-dashoffset: calc(var(--dash, 16px) * -1); } }
+.pulse { fill: none; stroke: var(--route); transform-box: fill-box; transform-origin: center; animation: pulse 1.8s ease-out infinite; pointer-events: none; }
+@keyframes pulse { from { transform: scale(1); opacity: 0.9; } to { transform: scale(2.6); opacity: 0; } }
+.modectl { position: absolute; left: 12px; bottom: 10px; display: flex; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; background: var(--surface); }
+.modectl button { border: 0; background: transparent; padding: 6px 10px; font-size: 12px; font-weight: 600; cursor: pointer; color: var(--muted); }
+.modectl button[aria-pressed="true"] { background: var(--accent); color: var(--on-accent); }
+.mapbox.picking .modectl { display: none; }
+.namebtn { border: 0; background: none; padding: 0; font-weight: 600; text-align: left; cursor: pointer; overflow-wrap: anywhere; }
+.namebtn:hover { color: var(--accent); text-decoration: underline; text-underline-offset: 3px; }
+.sphere { fill: var(--sea); }
+.grat { fill: none; stroke: var(--geo-line); stroke-width: 0.5; opacity: 0.45; vector-effect: non-scaling-stroke; }
+.country { fill: var(--land); stroke: var(--geo-line); stroke-width: 0.6; vector-effect: non-scaling-stroke; }
+.country.visited { fill: var(--land-visited); }
+.route { fill: none; stroke: var(--route); stroke-linecap: round; stroke-linejoin: round; }
+.head { fill: var(--route); stroke: var(--surface); }
+.marker circle { stroke: var(--surface); }
+.marker .num { font-family: var(--f-mono); font-weight: 700; fill: #fff; text-anchor: middle; dominant-baseline: central; pointer-events: none; }
+.mlabel { font-family: var(--f-body); font-weight: 600; fill: var(--ink); paint-order: stroke; stroke: var(--surface); stroke-linejoin: round; pointer-events: none; }
+.center-mark { fill: none; stroke: var(--ink); }
+.center-label { font-family: var(--f-mono); fill: var(--muted); paint-order: stroke; stroke: var(--surface); pointer-events: none; }
+.pickpin { fill: none; stroke: var(--route); }
+.cat-lahir { fill: var(--c-lahir); } .cat-sekolah { fill: var(--c-sekolah); } .cat-kuliah { fill: var(--c-kuliah); } .cat-kerja { fill: var(--c-kerja); } .cat-tinggal { fill: var(--c-tinggal); }
+.bg-lahir { background: var(--c-lahir); } .bg-sekolah { background: var(--c-sekolah); } .bg-kuliah { background: var(--c-kuliah); } .bg-kerja { background: var(--c-kerja); } .bg-tinggal { background: var(--c-tinggal); }
+
+.yearbadge { position: absolute; left: 12px; top: 10px; font-family: var(--f-mono); font-weight: 700; font-size: clamp(20px, 4vw, 30px); color: var(--ink); background: color-mix(in srgb, var(--surface) 82%, transparent); padding: 2px 10px; border-radius: 8px; pointer-events: none; font-variant-numeric: tabular-nums; }
+.zoomctl { position: absolute; right: 10px; top: 10px; display: flex; flex-direction: column; gap: 6px; }
+.zoomctl button { width: 34px; height: 34px; border-radius: 8px; border: 1px solid var(--line); background: var(--surface); cursor: pointer; font-size: 18px; line-height: 1; display: grid; place-items: center; }
+.zoomctl button.fit { font-size: 11px; font-weight: 600; }
+.pickhint { position: absolute; left: 50%; bottom: 10px; transform: translateX(-50%); background: var(--ink); color: var(--bg); padding: 6px 12px; border-radius: 999px; font-size: 13px; font-weight: 500; max-width: calc(100% - 24px); text-align: center; }
+.mapmsg { position: absolute; left: 12px; bottom: 48px; font-size: 12px; color: var(--muted); background: var(--surface); padding: 4px 8px; border-radius: 6px; }
+
+.timeline { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; padding: 12px 14px; border-top: 1px solid var(--line); }
+.timeline .slide { flex: 1 1 220px; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.timeline input[type="range"] { width: 100%; accent-color: var(--route); }
+.caption { font-size: 13px; color: var(--muted); min-height: 1.5em; }
+.caption b { color: var(--ink); font-weight: 600; }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 14px; padding: 0 14px 12px; font-size: 12px; color: var(--muted); }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; flex: none; }
+.maptip { padding: 0 14px 12px; font-size: 12px; color: var(--muted); }
+
+.side { display: flex; flex-direction: column; gap: 20px; min-width: 0; }
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 16px; display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+.field { display: flex; flex-direction: column; gap: 4px; position: relative; min-width: 0; }
+.field label { font-size: 12px; font-weight: 600; color: var(--muted); }
+.field input, .field select { border: 1px solid var(--line); background: var(--bg); border-radius: 8px; padding: 8px 10px; width: 100%; min-width: 0; }
+.row2 { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: 10px; }
+.suggest { position: absolute; top: 100%; left: 0; right: 0; z-index: 5; margin: 4px 0 0; padding: 4px; list-style: none; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; box-shadow: 0 8px 24px rgba(0,0,0,0.16); max-height: 260px; overflow-y: auto; }
+.suggest li { padding: 7px 10px; border-radius: 6px; cursor: pointer; display: flex; justify-content: space-between; gap: 10px; }
+.suggest li small { color: var(--muted); text-align: right; }
+.suggest li.on, .suggest li:hover { background: var(--bg); }
+.linkbtn { background: none; border: 0; padding: 0; color: var(--accent); font-weight: 600; font-size: 13px; cursor: pointer; text-align: left; text-decoration: underline; text-underline-offset: 3px; }
+.picked { font-family: var(--f-mono); font-size: 12px; color: var(--muted); }
+.err { color: var(--danger); font-size: 13px; font-weight: 500; }
+
+.itin { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
+.stop { display: grid; grid-template-columns: 26px minmax(0, 1fr) auto; gap: 10px; align-items: start; padding: 6px 0; }
+.chip { width: 26px; height: 26px; border-radius: 50%; color: #fff; font-family: var(--f-mono); font-weight: 700; font-size: 12px; display: grid; place-items: center; }
+.stop .name { font-weight: 600; overflow-wrap: anywhere; }
+.stop .meta { font-size: 13px; color: var(--muted); }
+.stop .note { font-size: 13px; font-style: italic; overflow-wrap: anywhere; }
+.del { border: 0; background: none; color: var(--muted); cursor: pointer; font-size: 18px; line-height: 1; padding: 4px 6px; border-radius: 6px; }
+.del:hover { color: var(--danger); background: var(--bg); }
+.leg { margin-left: 12px; padding: 2px 0 2px 23px; border-left: 2px dotted var(--route); font-family: var(--f-mono); font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.empty { color: var(--muted); font-size: 14px; }
+.panelhead { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+
+.stats { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 20px; display: flex; flex-direction: column; gap: 18px; }
+.odo { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 14px 24px; }
+.odo .big { font-family: var(--f-mono); font-weight: 700; font-size: clamp(40px, 9vw, 76px); line-height: 1; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; color: var(--route); }
+.odo .big small { font-size: 0.35em; letter-spacing: 0; color: var(--muted); margin-left: 6px; }
+.cmp { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px 24px; border-block: 1px solid var(--line); padding-block: 14px; }
+.cmp li { min-width: 0; }
+.cmp b { font-family: var(--f-mono); font-size: 20px; font-variant-numeric: tabular-nums; display: block; }
+.cmp span { font-size: 13px; color: var(--muted); }
+.facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 14px 24px; margin: 0; }
+.facts div { min-width: 0; }
+.facts dt { font-size: 12px; font-weight: 600; color: var(--muted); }
+.facts dd { margin: 2px 0 0; font-weight: 600; overflow-wrap: anywhere; }
+.facts dd small { display: block; font-weight: 400; color: var(--muted); font-size: 13px; }
+.foot { font-size: 12px; color: var(--muted); }
+
+dialog { border: 1px solid var(--line); border-radius: 14px; background: var(--surface); color: var(--ink); padding: 18px; width: min(460px, calc(100vw - 32px)); max-height: calc(100vh - 32px); overflow-y: auto; }
+dialog::backdrop { background: rgba(0,0,0,0.55); }
+dialog .dlg { display: flex; flex-direction: column; gap: 12px; }
+dialog img { width: 100%; height: auto; border-radius: 10px; display: block; background: #0F1E22; aspect-ratio: 4 / 5; }
+.dlgrow { display: flex; flex-wrap: wrap; gap: 8px; justify-content: space-between; align-items: center; }
+#copyBox { width: 100%; min-height: 70px; font: inherit; font-size: 13px; border: 1px solid var(--line); border-radius: 8px; background: var(--bg); color: var(--ink); padding: 8px; }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+</style>
+
+<div class="wrap">
+  <header>
+    <p class="eyebrow">Dari kota lahir sampai hari ini</p>
+    <h1>Peta Perjalanan Hidup</h1>
+    <p class="lede">Tandai kota tempat kamu lahir, sekolah, kuliah, bekerja, dan tinggal. Peta akan menyambungkannya menjadi satu garis dan menghitung seberapa jauh hidup sudah membawamu.</p>
+  </header>
+
+  <div class="banner" id="banner" hidden>
+    <p><strong>Ini contoh perjalanan.</strong> Begitu kamu menambah tempat pertamamu, contoh ini diganti dengan perjalananmu sendiri.</p>
+    <button class="btn btn-sm" id="btnClearExample" type="button">Mulai dari kosong</button>
+  </div>
+
+  <div class="grid">
+    <section class="mapcard" aria-label="Peta perjalanan">
+      <div class="mapbox" id="mapbox">
+        <canvas id="globe" hidden></canvas>
+        <svg id="map" role="img" aria-label="Peta dunia dengan rute perjalanan hidup">
+          <g id="gBase"></g>
+          <g id="gOver"></g>
+        </svg>
+        <div class="yearbadge" id="yearBadge" hidden></div>
+        <div class="zoomctl">
+          <button type="button" id="zIn" aria-label="Perbesar peta">+</button>
+          <button type="button" id="zOut" aria-label="Perkecil peta">&minus;</button>
+          <button type="button" id="zFit" class="fit" aria-label="Paskan peta ke rute">Pas</button>
+        </div>
+        <div class="modectl" role="group" aria-label="Tampilan peta">
+          <button type="button" id="mGlobe" aria-pressed="true">Bola dunia</button>
+          <button type="button" id="mFlat" aria-pressed="false">Peta datar</button>
+        </div>
+        <div class="pickhint" id="pickHint" hidden>Klik lokasi di peta untuk menandai tempatnya</div>
+        <div class="mapmsg" id="mapMsg" hidden>Gambar daratan gagal dimuat. Titik dan rute tetap bisa dipakai.</div>
+      </div>
+      <div class="timeline">
+        <button class="btn btn-primary" id="btnPlay" type="button">&#9654; Putar perjalanan</button>
+        <div class="slide">
+          <input type="range" id="yearSlider" min="1990" max="2026" value="2026" step="1" aria-label="Geser tahun">
+          <div class="caption" id="caption"></div>
+        </div>
+      </div>
+      <div class="legend" aria-hidden="true">
+        <span><i class="dot bg-lahir"></i>Lahir</span>
+        <span><i class="dot bg-sekolah"></i>Sekolah</span>
+        <span><i class="dot bg-kuliah"></i>Kuliah</span>
+        <span><i class="dot bg-kerja"></i>Kerja</span>
+        <span><i class="dot bg-tinggal"></i>Tinggal</span>
+      </div>
+      <p class="maptip">Seret untuk memutar bola dunia atau menggeser peta. Perbesar dengan tombol + dan &minus; atau Ctrl + scroll. Klik nama tempat di daftar untuk mendekat ke sana.</p>
+    </section>
+
+    <aside class="side">
+      <form class="panel" id="addForm" autocomplete="off" novalidate>
+        <h2>Tambah tempat</h2>
+        <div class="field">
+          <label for="cityInput">Kota atau tempat</label>
+          <input id="cityInput" type="text" placeholder="Ketik nama kota, misalnya Semarang" role="combobox" aria-expanded="false" aria-controls="suggest" aria-autocomplete="list">
+          <ul class="suggest" id="suggest" role="listbox" hidden></ul>
+        </div>
+        <div class="picked" id="cityStatus">Memuat daftar kota dunia&hellip;</div>
+        <button class="linkbtn" type="button" id="btnPick">Tidak ada di daftar? Tandai titiknya di peta</button>
+        <div class="picked" id="pickedInfo" hidden></div>
+        <div class="row2">
+          <div class="field">
+            <label for="catInput">Kategori</label>
+            <select id="catInput">
+              <option value="lahir">Lahir</option>
+              <option value="sekolah">Sekolah</option>
+              <option value="kuliah">Kuliah</option>
+              <option value="kerja">Kerja</option>
+              <option value="tinggal">Tinggal</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="yearInput">Sejak tahun</label>
+            <input id="yearInput" type="number" inputmode="numeric" min="1900" max="2100" placeholder="2015">
+          </div>
+        </div>
+        <div class="field">
+          <label for="noteInput">Catatan (opsional)</label>
+          <input id="noteInput" type="text" maxlength="80" placeholder="Satu kalimat kenangan di tempat ini">
+        </div>
+        <div class="err" id="formErr" role="alert" hidden></div>
+        <button class="btn btn-primary" type="submit">Tambah ke perjalanan</button>
+      </form>
+
+      <section class="panel" aria-label="Urutan perjalanan">
+        <div class="panelhead">
+          <h2>Urutan perjalanan</h2>
+          <button class="btn btn-sm btn-ghost btn-danger" id="btnReset" type="button">Hapus semua</button>
+        </div>
+        <ol class="itin" id="itin"></ol>
+        <p class="empty" id="emptyMsg" hidden>Belum ada tempat. Mulai dari kota kelahiranmu, lalu tambahkan tempat berikutnya sesuai tahun.</p>
+      </section>
+    </aside>
+  </div>
+
+  <section class="stats" aria-label="Angka perjalanan">
+    <div class="odo">
+      <div>
+        <p class="eyebrow">Total jarak perpindahan</p>
+        <div class="big"><span id="totalKm">0</span><small>km</small></div>
+      </div>
+      <button class="btn btn-primary" id="btnCard" type="button">Buat kartu ringkasan</button>
+    </div>
+    <ul class="cmp" id="cmp"></ul>
+    <dl class="facts" id="facts"></dl>
+    <p class="foot">Jarak dihitung sebagai garis lurus di permukaan bumi antara dua tempat yang berurutan, bukan jarak jalan. Data tempatmu hanya disimpan di browser ini. Nama dan koordinat kota dari <a href="https://www.geonames.org/" style="color: inherit">GeoNames</a> (CC BY 4.0); garis daratan dari Natural Earth.</p>
+  </section>
+</div>
+
+<dialog id="cardDlg" aria-label="Kartu ringkasan">
+  <div class="dlg">
+    <div class="dlgrow">
+      <h2>Kartu ringkasan</h2>
+      <button class="btn btn-sm" type="button" id="btnCloseCard">Tutup</button>
+    </div>
+    <div class="field">
+      <label for="ownerInput">Nama di kartu (opsional)</label>
+      <input id="ownerInput" type="text" maxlength="28" placeholder="Namamu">
+    </div>
+    <img id="cardImg" alt="Kartu ringkasan perjalanan hidup">
+    <p class="foot">Simpan gambarnya dengan menekan lama (HP) atau klik kanan (komputer) pada kartu, atau ambil tangkapan layar.</p>
+    <div class="dlgrow">
+      <button class="btn" type="button" id="btnCopy">Salin ringkasan teks</button>
+      <span class="foot" id="copyMsg"></span>
+    </div>
+    <textarea id="copyBox" readonly hidden></textarea>
+  </div>
+</dialog>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/datamaps/0.5.9/datamaps.world.hires.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/topojson/3.0.2/topojson.min.js"></script>
+<script>
+(function () {
+  'use strict';
+  var $ = function (id) { return document.getElementById(id); };
+  if (!window.d3) {
+    $('mapMsg').hidden = false;
+    $('mapMsg').textContent = 'Pustaka peta gagal dimuat. Muat ulang halaman ini.';
+    return;
+  }
+
+  var NOW = new Date().getFullYear();
+  var R_EARTH = 6371;
+  var STORE_KEY = 'peta-perjalanan-hidup-v1';
+  var CAT = { lahir: 'Lahir', sekolah: 'Sekolah', kuliah: 'Kuliah', kerja: 'Kerja', tinggal: 'Tinggal' };
+  var CARD_COL = { lahir: '#F2BE3A', sekolah: '#62A8F2', kuliah: '#A98BEB', kerja: '#4DCB96', tinggal: '#F28B55' };
+  var NEGARA = { IDN: 'Indonesia', SGP: 'Singapura', MYS: 'Malaysia', BRN: 'Brunei', THA: 'Thailand', VNM: 'Vietnam', PHL: 'Filipina', KHM: 'Kamboja', LAO: 'Laos', MMR: 'Myanmar', TLS: 'Timor Leste', JPN: 'Jepang', KOR: 'Korea Selatan', CHN: 'Tiongkok', HKG: 'Hong Kong', TWN: 'Taiwan', IND: 'India', BGD: 'Bangladesh', LKA: 'Sri Lanka', NPL: 'Nepal', PAK: 'Pakistan', ARE: 'Uni Emirat Arab', QAT: 'Qatar', SAU: 'Arab Saudi', KWT: 'Kuwait', OMN: 'Oman', BHR: 'Bahrain', IRN: 'Iran', TUR: 'Turki', JOR: 'Yordania', EGY: 'Mesir', TUN: 'Tunisia', MAR: 'Maroko', SDN: 'Sudan', NGA: 'Nigeria', GHA: 'Ghana', KEN: 'Kenya', ETH: 'Etiopia', TZA: 'Tanzania', ZAF: 'Afrika Selatan', GBR: 'Inggris Raya', IRL: 'Irlandia', FRA: 'Prancis', NLD: 'Belanda', BEL: 'Belgia', DEU: 'Jerman', AUT: 'Austria', CHE: 'Swiss', ITA: 'Italia', ESP: 'Spanyol', PRT: 'Portugal', DNK: 'Denmark', SWE: 'Swedia', NOR: 'Norwegia', FIN: 'Finlandia', POL: 'Polandia', CZE: 'Ceko', HUN: 'Hungaria', GRC: 'Yunani', RUS: 'Rusia', UKR: 'Ukraina', AUS: 'Australia', NZL: 'Selandia Baru', USA: 'Amerika Serikat', CAN: 'Kanada', MEX: 'Meksiko', BRA: 'Brasil', ARG: 'Argentina', CHL: 'Cile', PER: 'Peru', COL: 'Kolombia', SUR: 'Suriname' };
+
+  var CITY_RAW = [
+    'IDN:Banda Aceh,5.55,95.32;Sabang,5.89,95.32;Lhokseumawe,5.18,97.15;Langsa,4.47,97.97;Medan,3.59,98.67;Binjai,3.60,98.49;Pematangsiantar,2.96,99.06;Tebing Tinggi,3.33,99.16;Sibolga,1.74,98.78;Padangsidimpuan,1.38,99.27;Gunungsitoli,1.29,97.61;Padang,-0.95,100.35;Bukittinggi,-0.31,100.37;Payakumbuh,-0.22,100.63;Solok,-0.80,100.66;Pekanbaru,0.51,101.45;Dumai,1.67,101.45;Batam,1.13,104.05;Tanjungpinang,0.92,104.45;Jambi,-1.61,103.61;Palembang,-2.99,104.76;Lubuklinggau,-3.30,102.86;Prabumulih,-3.43,104.24;Pangkalpinang,-2.13,106.11;Tanjungpandan,-2.74,107.63;Bengkulu,-3.80,102.27;Bandar Lampung,-5.43,105.26;Metro,-5.11,105.31',
+    'IDN:Jakarta,-6.21,106.85;Bogor,-6.60,106.80;Depok,-6.40,106.82;Tangerang,-6.18,106.63;Tangerang Selatan,-6.29,106.71;Bekasi,-6.24,106.99;Serang,-6.12,106.15;Cilegon,-6.02,106.05;Bandung,-6.91,107.61;Cimahi,-6.87,107.54;Sukabumi,-6.92,106.93;Cianjur,-6.82,107.14;Garut,-7.22,107.90;Tasikmalaya,-7.33,108.22;Cirebon,-6.73,108.55;Karawang,-6.31,107.30;Purwakarta,-6.56,107.44;Subang,-6.57,107.76;Indramayu,-6.33,108.32',
+    'IDN:Semarang,-6.99,110.42;Surakarta (Solo),-7.57,110.83;Yogyakarta,-7.80,110.36;Magelang,-7.47,110.22;Salatiga,-7.33,110.50;Purwokerto,-7.43,109.24;Cilacap,-7.73,109.01;Tegal,-6.87,109.14;Pekalongan,-6.89,109.68;Kudus,-6.80,110.84;Jepara,-6.59,110.67;Pati,-6.75,111.04;Klaten,-7.71,110.60',
+    'IDN:Surabaya,-7.26,112.75;Sidoarjo,-7.45,112.72;Gresik,-7.16,112.65;Malang,-7.98,112.63;Batu,-7.87,112.53;Kediri,-7.82,112.01;Blitar,-8.10,112.17;Madiun,-7.63,111.52;Mojokerto,-7.47,112.43;Pasuruan,-7.65,112.91;Probolinggo,-7.75,113.22;Jember,-8.17,113.70;Banyuwangi,-8.22,114.37;Tulungagung,-8.07,111.90;Ponorogo,-7.87,111.46;Bojonegoro,-7.15,111.88;Lamongan,-7.12,112.42;Tuban,-6.90,112.05;Pamekasan,-7.16,113.48;Sumenep,-7.01,113.86',
+    'IDN:Denpasar,-8.65,115.22;Singaraja,-8.11,115.09;Ubud,-8.51,115.26;Mataram,-8.58,116.12;Sumbawa Besar,-8.49,117.42;Bima,-8.46,118.73;Labuan Bajo,-8.50,119.89;Ende,-8.85,121.66;Maumere,-8.62,122.21;Waingapu,-9.66,120.26;Kupang,-10.18,123.61',
+    'IDN:Pontianak,-0.03,109.34;Singkawang,0.91,108.98;Ketapang,-1.85,109.97;Sintang,0.07,111.50;Palangka Raya,-2.21,113.92;Sampit,-2.53,112.95;Pangkalan Bun,-2.68,111.63;Banjarmasin,-3.32,114.59;Banjarbaru,-3.44,114.83;Balikpapan,-1.27,116.83;Samarinda,-0.50,117.15;Bontang,0.13,117.50;Nusantara (IKN),-0.97,116.71;Tarakan,3.30,117.63;Tanjung Selor,2.84,117.37',
+    'IDN:Makassar,-5.15,119.43;Parepare,-4.01,119.62;Palopo,-3.00,120.20;Watampone,-4.54,120.33;Kendari,-3.99,122.51;Baubau,-5.47,122.60;Palu,-0.90,119.87;Luwuk,-0.95,122.79;Poso,-1.39,120.75;Mamuju,-2.68,118.89;Gorontalo,0.54,123.06;Manado,1.47,124.84;Bitung,1.44,125.19;Tomohon,1.33,124.84',
+    'IDN:Ternate,0.79,127.38;Tidore,0.68,127.40;Sofifi,0.74,127.56;Ambon,-3.70,128.18;Tual,-5.63,132.75;Sorong,-0.88,131.26;Manokwari,-0.86,134.06;Fakfak,-2.92,132.30;Biak,-1.18,136.08;Nabire,-3.37,135.50;Timika,-4.55,136.89;Jayapura,-2.53,140.72;Wamena,-4.10,138.95;Merauke,-8.49,140.40',
+    'SGP:Singapura,1.35,103.82', 'MYS:Kuala Lumpur,3.14,101.69;Johor Bahru,1.49,103.74;Penang,5.41,100.33;Kuching,1.55,110.34;Kota Kinabalu,5.98,116.07',
+    'BRN:Bandar Seri Begawan,4.90,114.94', 'THA:Bangkok,13.76,100.50;Chiang Mai,18.79,98.98', 'VNM:Hanoi,21.03,105.85;Ho Chi Minh City,10.82,106.63',
+    'PHL:Manila,14.60,120.98;Cebu,10.32,123.89', 'KHM:Phnom Penh,11.56,104.92', 'LAO:Vientiane,17.97,102.63', 'MMR:Yangon,16.84,96.17', 'TLS:Dili,-8.56,125.57',
+    'JPN:Tokyo,35.68,139.69;Osaka,34.69,135.50;Kyoto,35.01,135.77;Nagoya,35.18,136.91;Fukuoka,33.59,130.40;Sapporo,43.06,141.35',
+    'KOR:Seoul,37.57,126.98;Busan,35.18,129.08',
+    'CHN:Beijing,39.90,116.41;Shanghai,31.23,121.47;Guangzhou,23.13,113.26;Shenzhen,22.54,114.06;Wuhan,30.59,114.31;Chengdu,30.57,104.07;Hangzhou,30.27,120.16;Nanjing,32.06,118.80',
+    'HKG:Hong Kong,22.32,114.17', 'TWN:Taipei,25.03,121.57',
+    'IND:New Delhi,28.61,77.21;Mumbai,19.08,72.88;Bengaluru,12.97,77.59;Chennai,13.08,80.27;Hyderabad,17.39,78.49;Kolkata,22.57,88.36',
+    'BGD:Dhaka,23.81,90.41', 'LKA:Colombo,6.93,79.86', 'NPL:Kathmandu,27.72,85.32', 'PAK:Karachi,24.86,67.01;Islamabad,33.68,73.05;Lahore,31.55,74.34',
+    'ARE:Dubai,25.20,55.27;Abu Dhabi,24.45,54.38', 'QAT:Doha,25.29,51.53', 'SAU:Riyadh,24.71,46.68;Jeddah,21.49,39.19;Makkah,21.39,39.86;Madinah,24.47,39.61',
+    'KWT:Kuwait City,29.38,47.98', 'OMN:Muscat,23.59,58.41', 'BHR:Manama,26.23,50.59', 'IRN:Teheran,35.69,51.39', 'TUR:Istanbul,41.01,28.98;Ankara,39.93,32.86', 'JOR:Amman,31.95,35.93',
+    'EGY:Kairo,30.04,31.24', 'TUN:Tunis,36.81,10.18', 'MAR:Rabat,34.02,-6.84;Casablanca,33.57,-7.59', 'SDN:Khartoum,15.50,32.56', 'NGA:Lagos,6.52,3.38', 'GHA:Accra,5.60,-0.19',
+    'KEN:Nairobi,-1.29,36.82', 'ETH:Addis Ababa,9.03,38.74', 'TZA:Dar es Salaam,-6.79,39.21', 'ZAF:Johannesburg,-26.20,28.05;Cape Town,-33.92,18.42',
+    'GBR:London,51.51,-0.13;Manchester,53.48,-2.24;Birmingham,52.49,-1.89;Edinburgh,55.95,-3.19;Leeds,53.80,-1.55', 'IRL:Dublin,53.35,-6.26', 'FRA:Paris,48.86,2.35;Lyon,45.76,4.84',
+    'NLD:Amsterdam,52.37,4.90;Rotterdam,51.92,4.48;Den Haag,52.08,4.31;Leiden,52.16,4.49;Delft,52.01,4.36;Groningen,53.22,6.57;Wageningen,51.97,5.67;Utrecht,52.09,5.12;Eindhoven,51.44,5.48',
+    'BEL:Brussel,50.85,4.35', 'DEU:Berlin,52.52,13.40;Muenchen,48.14,11.58;Hamburg,53.55,9.99;Frankfurt,50.11,8.68;Koeln,50.94,6.96;Stuttgart,48.78,9.18;Aachen,50.78,6.08',
+    'AUT:Wina,48.21,16.37', 'CHE:Zurich,47.38,8.54;Jenewa,46.20,6.14', 'ITA:Roma,41.90,12.50;Milan,45.46,9.19', 'ESP:Madrid,40.42,-3.70;Barcelona,41.39,2.17', 'PRT:Lisbon,38.72,-9.14',
+    'DNK:Kopenhagen,55.68,12.57', 'SWE:Stockholm,59.33,18.07', 'NOR:Oslo,59.91,10.75', 'FIN:Helsinki,60.17,24.94', 'POL:Warsawa,52.23,21.01', 'CZE:Praha,50.08,14.44', 'HUN:Budapest,47.50,19.04', 'GRC:Athena,37.98,23.73',
+    'RUS:Moskow,55.76,37.62;Saint Petersburg,59.93,30.34', 'UKR:Kyiv,50.45,30.52',
+    'AUS:Sydney,-33.87,151.21;Melbourne,-37.81,144.96;Brisbane,-27.47,153.03;Perth,-31.95,115.86;Adelaide,-34.93,138.60;Canberra,-35.28,149.13;Darwin,-12.46,130.84', 'NZL:Auckland,-36.85,174.76;Wellington,-41.29,174.78',
+    'USA:New York,40.71,-74.01;Los Angeles,34.05,-118.24;San Francisco,37.77,-122.42;Seattle,47.61,-122.33;Chicago,41.88,-87.63;Boston,42.36,-71.06;Washington DC,38.91,-77.04;Houston,29.76,-95.37;Dallas,32.78,-96.80;Atlanta,33.75,-84.39;Miami,25.76,-80.19;Honolulu,21.31,-157.86',
+    'CAN:Toronto,43.65,-79.38;Vancouver,49.28,-123.12;Montreal,45.50,-73.57', 'MEX:Mexico City,19.43,-99.13', 'BRA:Sao Paulo,-23.55,-46.63;Rio de Janeiro,-22.91,-43.17',
+    'ARG:Buenos Aires,-34.60,-58.38', 'CHL:Santiago,-33.45,-70.67', 'PER:Lima,-12.05,-77.04', 'COL:Bogota,4.71,-74.07', 'SUR:Paramaribo,5.85,-55.20'
+  ];
+  var norm = function (s) { return String(s).toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9 ]/g, ' ').replace(/\s+/g, ' ').trim(); };
+  var CITIES = [];
+  CITY_RAW.forEach(function (block) {
+    var iso = block.slice(0, 3);
+    block.slice(4).split(';').forEach(function (c) {
+      var a = c.split(',');
+      CITIES.push({ name: a[0], lat: +a[1], lon: +a[2], iso: iso, key: norm(a[0]) });
+    });
+  });
+  /* Kota dunia dari GeoNames, dimuat dari berkas pendamping. Urutannya dari penduduk terbanyak. */
+  var WORLD = [];
+  var A3 = {};
+  'AF:AFG,AL:ALB,DZ:DZA,AS:ASM,AD:AND,AO:AGO,AI:AIA,AG:ATG,AR:ARG,AM:ARM,AW:ABW,AU:AUS,AT:AUT,AZ:AZE,BS:BHS,BH:BHR,BD:BGD,BB:BRB,BY:BLR,BE:BEL,BZ:BLZ,BJ:BEN,BM:BMU,BT:BTN,BO:BOL,BA:BIH,BW:BWA,BR:BRA,BN:BRN,BG:BGR,BF:BFA,BI:BDI,KH:KHM,CM:CMR,CA:CAN,CV:CPV,KY:CYM,CF:CAF,TD:TCD,CL:CHL,CN:CHN,CO:COL,KM:COM,CG:COG,CD:COD,CR:CRI,CI:CIV,HR:HRV,CU:CUB,CY:CYP,CZ:CZE,DK:DNK,DJ:DJI,DM:DMA,DO:DOM,EC:ECU,EG:EGY,SV:SLV,GQ:GNQ,ER:ERI,EE:EST,ET:ETH,FJ:FJI,FI:FIN,FR:FRA,GA:GAB,GM:GMB,GE:GEO,DE:DEU,GH:GHA,GR:GRC,GL:GRL,GD:GRD,GT:GTM,GN:GIN,GW:GNB,GY:GUY,HT:HTI,HN:HND,HK:HKG,HU:HUN,IS:ISL,IN:IND,ID:IDN,IR:IRN,IQ:IRQ,IE:IRL,IL:ISR,IT:ITA,JM:JAM,JP:JPN,JO:JOR,KZ:KAZ,KE:KEN,KI:KIR,KP:PRK,KR:KOR,KW:KWT,KG:KGZ,LA:LAO,LV:LVA,LB:LBN,LS:LSO,LR:LBR,LY:LBY,LI:LIE,LT:LTU,LU:LUX,MO:MAC,MK:MKD,MG:MDG,MW:MWI,MY:MYS,MV:MDV,ML:MLI,MT:MLT,MH:MHL,MR:MRT,MU:MUS,MX:MEX,FM:FSM,MD:MDA,MC:MCO,MN:MNG,ME:MNE,MA:MAR,MZ:MOZ,MM:MMR,NA:NAM,NR:NRU,NP:NPL,NL:NLD,NC:NCL,NZ:NZL,NI:NIC,NE:NER,NG:NGA,NO:NOR,OM:OMN,PK:PAK,PW:PLW,PS:PSE,PA:PAN,PG:PNG,PY:PRY,PE:PER,PH:PHL,PL:POL,PT:PRT,PR:PRI,QA:QAT,RO:ROU,RU:RUS,RW:RWA,KN:KNA,LC:LCA,VC:VCT,WS:WSM,SM:SMR,ST:STP,SA:SAU,SN:SEN,RS:SRB,SC:SYC,SL:SLE,SG:SGP,SK:SVK,SI:SVN,SB:SLB,SO:SOM,ZA:ZAF,SS:SSD,ES:ESP,LK:LKA,SD:SDN,SR:SUR,SZ:SWZ,SE:SWE,CH:CHE,SY:SYR,TW:TWN,TJ:TJK,TZ:TZA,TH:THA,TL:TLS,TG:TGO,TO:TON,TT:TTO,TN:TUN,TR:TUR,TM:TKM,TV:TUV,UG:UGA,UA:UKR,AE:ARE,GB:GBR,US:USA,UY:URY,UZ:UZB,VU:VUT,VE:VEN,VN:VNM,YE:YEM,ZM:ZMB,ZW:ZWE,EH:ESH,FK:FLK,PF:PYF,GU:GUM'
+    .split(',').forEach(function (s) { A3[s.slice(0, 2)] = s.slice(3); });
+  var ID_PROV = { '01': 'Aceh', '02': 'Bali', '03': 'Bengkulu', '04': 'DKI Jakarta', '05': 'Jambi', '07': 'Jawa Tengah', '08': 'Jawa Timur', '10': 'DI Yogyakarta', '11': 'Kalimantan Barat', '12': 'Kalimantan Selatan', '13': 'Kalimantan Tengah', '14': 'Kalimantan Timur', '15': 'Lampung', '17': 'Nusa Tenggara Barat', '18': 'Nusa Tenggara Timur', '21': 'Sulawesi Tengah', '22': 'Sulawesi Tenggara', '24': 'Sumatera Barat', '26': 'Sumatera Utara', '28': 'Maluku', '29': 'Maluku Utara', '30': 'Jawa Barat', '31': 'Sulawesi Utara', '32': 'Sumatera Selatan', '33': 'Banten', '34': 'Gorontalo', '35': 'Bangka Belitung', '36': 'Papua', '37': 'Riau', '38': 'Sulawesi Selatan', '39': 'Papua Barat', '40': 'Kepulauan Riau', '41': 'Sulawesi Barat', '42': 'Kalimantan Utara', 'PD': 'Papua Barat Daya', 'PE': 'Papua Pegunungan', 'PS': 'Papua Selatan', 'PT': 'Papua Tengah' };
+  var regionNames = null;
+  try { regionNames = new Intl.DisplayNames(['id'], { type: 'region' }); } catch (e) {}
+  var placeLabel = function (c) {
+    if (!c.cc) return NEGARA[c.iso] || c.iso || '';
+    var country = c.cc;
+    try { if (regionNames) country = regionNames.of(c.cc) || c.cc; } catch (e) {}
+    var prov = c.cc === 'ID' ? ID_PROV[c.a1] : (c.cc === 'US' && c.a1 ? c.a1 : null);
+    return (prov ? prov + ', ' : '') + country;
+  };
+  var builtIn = {};
+  CITIES.forEach(function (c) { (builtIn[c.key] = builtIn[c.key] || []).push(c); });
+  var loadWorld = function (onDone) {
+    if (!window.fetch) return onDone(false);
+    fetch('kota-dunia.txt').then(function (r) { if (!r.ok) throw new Error('gagal'); return r.text(); }).then(function (txt) {
+      var lines = txt.split('\n'), out = [];
+      for (var i = 0; i < lines.length; i++) {
+        var a = lines[i].split('|');
+        if (a.length < 5) continue;
+        var c = { name: a[0], cc: a[1], a1: a[2], lat: +a[3], lon: +a[4], key: norm(a[0]) };
+        if (!c.key || !isFinite(c.lat) || !isFinite(c.lon)) continue;
+        var same = builtIn[c.key];
+        if (same && same.some(function (b) { return Math.abs(b.lat - c.lat) < 0.4 && Math.abs(b.lon - c.lon) < 0.4; })) continue;
+        out.push(c);
+      }
+      WORLD = out; onDone(out.length > 0);
+    }).catch(function () { onDone(false); });
+  };
+  var cityByName = function (n) {
+    var k = norm(n);
+    return CITIES.find(function (c) { return c.key === k; }) || WORLD.find(function (c) { return c.key === k; });
+  };
+  var searchCities = function (q, limit) {
+    var pre = [], inc = [], i, c, lists = [CITIES, WORLD];
+    for (var l = 0; l < 2 && pre.length < limit; l++) {
+      for (i = 0; i < lists[l].length && pre.length < limit; i++) {
+        c = lists[l][i];
+        var at = c.key.indexOf(q);
+        if (at === 0) pre.push(c); else if (at > 0 && inc.length < limit) inc.push(c);
+      }
+    }
+    return pre.concat(inc).slice(0, limit);
+  };
+
+  var nf = new Intl.NumberFormat('id-ID', { maximumFractionDigits: 0 });
+  var nf1 = new Intl.NumberFormat('id-ID', { maximumFractionDigits: 1 });
+  var km = function (a, b) { return d3.geoDistance([a.lon, a.lat], [b.lon, b.lat]) * R_EARTH; };
+  var fmtCoord = function (lat, lon) {
+    var part = function (v) { var d = Math.floor(Math.abs(v)); var m = Math.round((Math.abs(v) - d) * 60); if (m === 60) { d += 1; m = 0; } return d + '°' + (m < 10 ? '0' : '') + m + '′'; };
+    return part(lat) + ' ' + (lat < 0 ? 'LS' : 'LU') + ', ' + part(lon) + ' ' + (lon < 0 ? 'BB' : 'BT');
+  };
+  var h = function (tag, attrs) {
+    var el = document.createElement(tag);
+    if (attrs) Object.keys(attrs).forEach(function (k) { if (k === 'text') el.textContent = attrs[k]; else if (k === 'class') el.className = attrs[k]; else el.setAttribute(k, attrs[k]); });
+    for (var i = 2; i < arguments.length; i++) { var c = arguments[i]; if (c != null) el.appendChild(typeof c === 'string' ? document.createTextNode(c) : c); }
+    return el;
+  };
+
+  /* ---------- State ---------- */
+  var seq = 1;
+  var mk = function (name, cat, year, note) { var c = cityByName(name); return { id: seq++, name: c.name, lat: c.lat, lon: c.lon, iso: c.iso, cat: cat, year: year, note: note || '' }; };
+  var exampleJourney = function () {
+    return [
+      mk('Makassar', 'lahir', 1995, 'Rumah nenek dekat Pantai Losari'),
+      mk('Balikpapan', 'sekolah', 2007, 'Ikut ayah pindah tugas'),
+      mk('Yogyakarta', 'kuliah', 2013, 'Kos di Pogung, angkringan tiap malam'),
+      mk('Jakarta', 'kerja', 2018, 'Pekerjaan pertama'),
+      mk('Singapura', 'kerja', 2022, ''),
+      mk('Bandung', 'tinggal', 2025, 'Pulang, kerja jarak jauh')
+    ];
+  };
+  var state = { places: [], example: true, owner: '' };
+  var load = function () {
+    try {
+      var raw = localStorage.getItem(STORE_KEY);
+      if (!raw) return false;
+      var s = JSON.parse(raw);
+      if (!s || !Array.isArray(s.places)) return false;
+      state.places = s.places.filter(function (p) { return p && isFinite(p.lat) && isFinite(p.lon) && isFinite(p.year) && CAT[p.cat]; });
+      state.example = !!s.example;
+      state.owner = typeof s.owner === 'string' ? s.owner : '';
+      state.mode = s.mode === 'flat' ? 'flat' : 'globe';
+      state.places.forEach(function (p) { if (p.id >= seq) seq = p.id + 1; });
+      return true;
+    } catch (e) { return false; }
+  };
+  var save = function () { try { localStorage.setItem(STORE_KEY, JSON.stringify(state)); } catch (e) {} };
+  if (!load()) { state.places = exampleJourney(); state.example = true; }
+  var sorted = function () { return state.places.slice().sort(function (a, b) { return a.year - b.year || a.id - b.id; }); };
+
+  /* ---------- Map ---------- */
+  var mapbox = $('mapbox');
+  var narrow = (mapbox.clientWidth || 800) < 560;
+  var W = narrow ? 720 : 960, H = narrow ? 560 : 540;
+  var svg = d3.select('#map').attr('viewBox', '0 0 ' + W + ' ' + H);
+  var gBase = d3.select('#gBase'), gOver = d3.select('#gOver');
+  var projection = d3.geoNaturalEarth1().rotate([-150, 0]).fitExtent([[0, 0], [W, H]], { type: 'Sphere' });
+  var path = d3.geoPath(projection);
+  var features = [];
+  try {
+    var topo = window.Datamap && window.Datamap.prototype.worldTopo;
+    if (topo && topo.objects && window.topojson) features = topojson.feature(topo, topo.objects.world).features;
+  } catch (e) { features = []; }
+  gBase.append('path').attr('class', 'sphere').attr('d', path({ type: 'Sphere' }));
+  gBase.append('path').attr('class', 'grat').attr('d', path(d3.geoGraticule().step([30, 30])()));
+  var countrySel = gBase.selectAll('path.country').data(features).join('path').attr('class', 'country').attr('d', path);
+  if (!features.length) $('mapMsg').hidden = false;
+
+  var T = d3.zoomIdentity;
+  var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var zoom = d3.zoom().scaleExtent([1, 80]).translateExtent([[0, 0], [W, H]])
+    .filter(function (e) {
+      if (mode === 'globe') return false;
+      if (e.type === 'wheel') return e.ctrlKey || e.metaKey;
+      if (e.type.indexOf('touch') === 0) return e.touches && e.touches.length > 1;
+      return !e.button;
+    })
+    .on('zoom', function (e) { T = e.transform; gBase.attr('transform', T); drawOverlay(); });
+  svg.call(zoom).on('dblclick.zoom', null);
+  var unit = function () { var w = svg.node().getBoundingClientRect().width; return w > 0 ? W / w : 1; };
+
+  /* ---------- Bola dunia ---------- */
+  var canvas = $('globe'), gctx = canvas.getContext('2d');
+  var R0 = Math.min(W, H) / 2 - 16;
+  var gproj = d3.geoOrthographic().translate([W / 2, H / 2]).clipAngle(90).precision(0.3);
+  var gpath = d3.geoPath(gproj), gpathC = d3.geoPath(gproj, gctx);
+  var graticule = d3.geoGraticule().step([20, 20])();
+  var cam = { rot: [-118, 4], k: 1 };
+  var mode = state.mode === 'flat' ? 'flat' : 'globe';
+  var featuresLow = features;
+  try {
+    if (features.length && topojson.presimplify) {
+      var pre = topojson.presimplify(window.Datamap.prototype.worldTopo);
+      var lo = topojson.simplify(pre, topojson.quantile(pre, 0.92));
+      featuresLow = topojson.feature(lo, lo.objects.world).features;
+    }
+  } catch (e) { featuresLow = features; }
+  var visitedIso = new Set(), tok = {}, hiresTimer = 0, camAnim = 0;
+  var TOK_DEF = { '--sea-hi': '#17343C', '--sea-lo': '#0A171B', '--halo': 'rgba(79,195,204,0.3)', '--halo-0': 'rgba(79,195,204,0)', '--limb': 'rgba(0,0,0,0.4)', '--land': '#2A4047', '--land-visited': '#6B5F26', '--geo-line': '#48626A' };
+  function readTokens() {
+    var cs = getComputedStyle(document.documentElement);
+    Object.keys(TOK_DEF).forEach(function (n) { tok[n] = cs.getPropertyValue(n).trim() || TOK_DEF[n]; });
+  }
+  function sizeCanvas() {
+    var w = mapbox.clientWidth || W, dpr = Math.min(window.devicePixelRatio || 1, 2);
+    var cw = Math.max(1, Math.round(w * dpr)), ch = Math.max(1, Math.round(w * H / W * dpr));
+    if (canvas.width !== cw || canvas.height !== ch) { canvas.width = cw; canvas.height = ch; }
+  }
+  function renderGlobe(fast) {
+    if (mode !== 'globe') return;
+    sizeCanvas();
+    if (!fast || !tok['--land']) readTokens();
+    var c = gctx, s = canvas.width / W, u = unit(), R = gproj.scale(), cx = W / 2, cy = H / 2, TAU = Math.PI * 2;
+    c.setTransform(s, 0, 0, s, 0, 0); c.clearRect(0, 0, W, H);
+    try {
+      var g = c.createRadialGradient(cx, cy, R * 0.97, cx, cy, R * 1.14);
+      g.addColorStop(0, tok['--halo']); g.addColorStop(1, tok['--halo-0']);
+      c.fillStyle = g; c.beginPath(); c.arc(cx, cy, R * 1.14, 0, TAU); c.fill();
+      var sg = c.createRadialGradient(cx - R * 0.35, cy - R * 0.4, R * 0.05, cx, cy, R * 1.05);
+      sg.addColorStop(0, tok['--sea-hi']); sg.addColorStop(1, tok['--sea-lo']);
+      c.fillStyle = sg;
+    } catch (e) { c.fillStyle = TOK_DEF['--sea-lo']; }
+    c.beginPath(); c.arc(cx, cy, R, 0, TAU); c.fill();
+    c.beginPath(); gpathC(graticule); c.strokeStyle = tok['--geo-line']; c.globalAlpha = 0.3; c.lineWidth = 0.6 * u; c.stroke(); c.globalAlpha = 1;
+    var fs = fast ? featuresLow : features;
+    c.lineWidth = 0.6 * u; c.lineJoin = 'round'; c.strokeStyle = tok['--geo-line'];
+    c.beginPath(); fs.forEach(function (f) { if (!visitedIso.has(f.id)) gpathC(f); }); c.fillStyle = tok['--land']; c.fill(); c.stroke();
+    c.beginPath(); fs.forEach(function (f) { if (visitedIso.has(f.id)) gpathC(f); }); c.fillStyle = tok['--land-visited']; c.fill(); c.stroke();
+    try {
+      var sh = c.createRadialGradient(cx, cy, R * 0.55, cx, cy, R);
+      sh.addColorStop(0, 'rgba(0,0,0,0)'); sh.addColorStop(1, tok['--limb']);
+      c.fillStyle = sh; c.beginPath(); c.arc(cx, cy, R, 0, TAU); c.fill();
+    } catch (e) {}
+  }
+  function applyCam(fast) {
+    cam.rot[0] = ((cam.rot[0] + 180) % 360 + 360) % 360 - 180;
+    cam.rot[1] = Math.max(-85, Math.min(85, cam.rot[1]));
+    cam.k = Math.max(1, Math.min(60, cam.k));
+    gproj.rotate([cam.rot[0], cam.rot[1]]).scale(R0 * cam.k);
+    renderGlobe(fast); drawOverlay();
+    clearTimeout(hiresTimer);
+    if (fast) hiresTimer = setTimeout(function () { renderGlobe(false); }, 160);
+  }
+  function animateCam(rot, k, dur) {
+    cancelAnimationFrame(camAnim);
+    if (reduced || !dur) { cam.rot = rot.slice(); cam.k = k; applyCam(false); return; }
+    var r0 = cam.rot.slice(), k0 = cam.k, dl = ((rot[0] - r0[0] + 900) % 360) - 180, t0 = performance.now();
+    (function step(now) {
+      var f = Math.min(1, Math.max(0, (now - t0) / dur)), e = f < 0.5 ? 2 * f * f : 1 - Math.pow(-2 * f + 2, 2) / 2;
+      cam.rot = [r0[0] + dl * e, r0[1] + (rot[1] - r0[1]) * e];
+      cam.k = Math.exp(Math.log(k0) + (Math.log(Math.max(1, k)) - Math.log(k0)) * e);
+      applyCam(f < 1);
+      if (f < 1) camAnim = requestAnimationFrame(step);
+    })(t0);
+  }
+  function legK(leg) { return Math.max(1, Math.min(40, 0.62 / Math.sin(Math.min(Math.max(leg.rad, 0.004), Math.PI / 2)))); }
+  function applyModeUI() {
+    mapbox.classList.toggle('globe', mode === 'globe');
+    gBase.attr('display', mode === 'globe' ? 'none' : null);
+    canvas.hidden = mode !== 'globe';
+    $('mGlobe').setAttribute('aria-pressed', String(mode === 'globe'));
+    $('mFlat').setAttribute('aria-pressed', String(mode === 'flat'));
+  }
+  function setMode(m) {
+    if (m === mode) return;
+    stopPlay(false); cancelAnimationFrame(camAnim);
+    mode = m; state.mode = m; save(); applyModeUI();
+    viewP = Math.max(0, S.length - 1);
+    if (S.length) { slider.value = slider.max; setCaption(+slider.max, S.length - 1); }
+    fitRoute(false); drawOverlay();
+  }
+  $('mGlobe').addEventListener('click', function () { setMode('globe'); });
+  $('mFlat').addEventListener('click', function () { setMode('flat'); });
+
+  var mapEl = svg.node(), drag = null, dragMoved = false;
+  mapEl.addEventListener('pointerdown', function (e) {
+    dragMoved = false;
+    if (mode !== 'globe' || e.button || playing) return;
+    cancelAnimationFrame(camAnim);
+    drag = { x: e.clientX, y: e.clientY, id: e.pointerId, moved: 0 };
+    try { mapEl.setPointerCapture(e.pointerId); } catch (err) {}
+  });
+  mapEl.addEventListener('pointermove', function (e) {
+    if (!drag || e.pointerId !== drag.id) return;
+    var dx = e.clientX - drag.x, dy = e.clientY - drag.y;
+    drag.x = e.clientX; drag.y = e.clientY; drag.moved += Math.abs(dx) + Math.abs(dy);
+    if (drag.moved > 5) dragMoved = true;
+    var sens = unit() * 180 / Math.PI / (R0 * cam.k);
+    cam.rot[0] += dx * sens; cam.rot[1] -= dy * sens;
+    applyCam(true);
+  });
+  var endDrag = function (e) { if (drag && e.pointerId === drag.id) drag = null; };
+  mapEl.addEventListener('pointerup', endDrag);
+  mapEl.addEventListener('pointercancel', endDrag);
+  mapEl.addEventListener('wheel', function (e) {
+    if (mode !== 'globe' || !(e.ctrlKey || e.metaKey)) return;
+    e.preventDefault(); cancelAnimationFrame(camAnim);
+    cam.k *= Math.exp(-e.deltaY * 0.003); applyCam(true);
+  }, { passive: false });
+
+  var S = [], legs = [], viewP = 0, playing = false, rafId = 0;
+  var pickMode = false, picked = null, center = null;
+
+  var rebuild = function () {
+    S = sorted();
+    legs = S.slice(1).map(function (b, i) {
+      var a = S[i], A = [a.lon, a.lat], B = [b.lon, b.lat];
+      var rad = d3.geoDistance(A, B), n = Math.max(2, Math.ceil(rad * 70) + 1), it = d3.geoInterpolate(A, B), pts = [];
+      var coords = [];
+      for (var j = 0; j < n; j++) { var ll = it(j / (n - 1)); coords.push(ll); pts.push(projection(ll)); }
+      return { a: a, b: b, km: rad * R_EARTH, pts: pts, coords: coords, it: it, rad: rad };
+    });
+    center = lifeCenter();
+    var isos = new Set(S.map(function (p) { return p.iso; }).filter(Boolean));
+    visitedIso = isos;
+    countrySel.classed('visited', function (d) { return isos.has(d.id); });
+  };
+
+  var legPoints = function (leg, frac) {
+    var last = (leg.pts.length - 1) * frac, full = Math.floor(last + 1e-9), out = leg.pts.slice(0, full + 1);
+    if (last - full > 1e-6 && full + 1 < leg.pts.length) {
+      var p0 = leg.pts[full], p1 = leg.pts[full + 1], f = last - full;
+      if (Math.abs(p1[0] - p0[0]) < W / 2) out.push([p0[0] + (p1[0] - p0[0]) * f, p0[1] + (p1[1] - p0[1]) * f]);
+    }
+    return out;
+  };
+  var toD = function (pts) {
+    var d = '';
+    pts.forEach(function (q, j) {
+      var brk = j === 0 || Math.abs(q[0] - pts[j - 1][0]) > W / 2, s = T.apply(q);
+      d += (brk ? 'M' : 'L') + s[0].toFixed(1) + ',' + s[1].toFixed(1);
+    });
+    return d;
+  };
+
+  function drawOverlay() {
+    var u = unit(), n = S.length, p = Math.max(0, Math.min(viewP, n - 1)), fl = Math.floor(p + 1e-9);
+    gOver.selectAll('*').remove();
+    var globe = mode === 'globe', eye = [-cam.rot[0], -cam.rot[1]];
+    var scr = function (lon, lat) {
+      if (!globe) return T.apply(projection([lon, lat]));
+      return d3.geoDistance([lon, lat], eye) < 1.55 ? gproj([lon, lat]) : null;
+    };
+    var d = '', head = null;
+    legs.forEach(function (leg, i) {
+      var frac = i < fl ? 1 : (i === fl && p - i > 1e-6 ? p - i : 0);
+      if (!frac) return;
+      if (globe) {
+        var full = Math.floor((leg.coords.length - 1) * frac + 1e-9), cs = leg.coords.slice(0, full + 1);
+        if (frac < 1) { var hl = leg.it(frac); cs.push(hl); head = scr(hl[0], hl[1]); }
+        if (cs.length > 1) d += gpath({ type: 'LineString', coordinates: cs }) || '';
+      } else {
+        var pts = legPoints(leg, frac); d += toD(pts);
+        if (frac < 1) head = T.apply(pts[pts.length - 1]);
+      }
+    });
+    if (d) {
+      gOver.append('path').attr('class', 'route').attr('d', d).attr('stroke-width', 2.6 * u);
+      if (!playing && !reduced) gOver.append('path').attr('class', 'flow').attr('d', d).attr('stroke-width', 1.5 * u)
+        .attr('stroke-dasharray', (1 * u) + ' ' + (15 * u)).style('--dash', (16 * u) + 'px');
+    }
+
+    var cmark = center ? scr(center.lon, center.lat) : null;
+    if (cmark && n > 1 && !playing && fl === n - 1) {
+      var c = cmark, r = 7 * u;
+      gOver.append('path').attr('class', 'center-mark').attr('stroke-width', 1.4 * u)
+        .attr('d', 'M' + (c[0] - r) + ',' + c[1] + 'L' + c[0] + ',' + (c[1] - r) + 'L' + (c[0] + r) + ',' + c[1] + 'L' + c[0] + ',' + (c[1] + r) + 'Z');
+      gOver.append('text').attr('class', 'center-label').attr('x', c[0]).attr('y', c[1] + r + 11 * u).attr('text-anchor', 'middle')
+        .attr('font-size', 9.5 * u).attr('stroke-width', 3 * u).text('pusat hidup');
+    }
+
+    var vis = S.filter(function (_, i) { return i <= fl; }).map(function (pl, i) {
+      var s = scr(pl.lon, pl.lat);
+      return s ? { pl: pl, i: i, x: s[0], y: s[1] } : null;
+    }).filter(Boolean);
+    var R = 10 * u, boxes = vis.map(function (m) { return [m.x - R, m.y - R, m.x + R, m.y + R]; });
+    var hit = function (b) { return boxes.some(function (o) { return b[0] < o[2] && b[2] > o[0] && b[1] < o[3] && b[3] > o[1]; }); };
+    vis.forEach(function (m) {
+      var g = gOver.append('g').attr('class', 'marker').attr('transform', 'translate(' + m.x.toFixed(1) + ',' + m.y.toFixed(1) + ')');
+      g.append('title').text(m.pl.name + ' · ' + CAT[m.pl.cat] + ' · ' + m.pl.year);
+      if (m.i === fl && !playing && !reduced) g.append('circle').attr('class', 'pulse').attr('r', R).attr('stroke-width', 2 * u);
+      g.append('circle').attr('r', R).attr('class', 'cat-' + m.pl.cat).attr('stroke-width', 2 * u);
+      g.append('text').attr('class', 'num').attr('font-size', 10.5 * u).text(m.i + 1);
+    });
+    vis.forEach(function (m) {
+      var fs = 12 * u, w = m.pl.name.length * fs * 0.56 + 6 * u, hh = fs * 1.3, gap = R + 4 * u;
+      var cands = [
+        { b: [m.x + gap, m.y - hh / 2, m.x + gap + w, m.y + hh / 2], a: 'start', x: m.x + gap, y: m.y },
+        { b: [m.x - gap - w, m.y - hh / 2, m.x - gap, m.y + hh / 2], a: 'end', x: m.x - gap, y: m.y },
+        { b: [m.x - w / 2, m.y - gap - hh, m.x + w / 2, m.y - gap], a: 'middle', x: m.x, y: m.y - gap - hh / 2 },
+        { b: [m.x - w / 2, m.y + gap, m.x + w / 2, m.y + gap + hh], a: 'middle', x: m.x, y: m.y + gap + hh / 2 }
+      ];
+      for (var k = 0; k < cands.length; k++) {
+        var c = cands[k];
+        if (c.b[0] < 0 || c.b[2] > W || c.b[1] < 0 || c.b[3] > H || hit(c.b)) continue;
+        boxes.push(c.b);
+        gOver.append('text').attr('class', 'mlabel').attr('x', c.x).attr('y', c.y).attr('text-anchor', c.a).attr('dominant-baseline', 'central')
+          .attr('font-size', fs).attr('stroke-width', 3.5 * u).text(m.pl.name);
+        break;
+      }
+    });
+    if (head) { var hs = head; gOver.append('circle').attr('class', 'head').attr('cx', hs[0]).attr('cy', hs[1]).attr('r', 5 * u).attr('stroke-width', 1.5 * u); }
+    if (picked && picked.fromMap) {
+      var ps = scr(picked.lon, picked.lat);
+      if (ps) gOver.append('circle').attr('class', 'pickpin').attr('cx', ps[0]).attr('cy', ps[1]).attr('r', 9 * u).attr('stroke-width', 2.4 * u).attr('stroke-dasharray', (3 * u) + ' ' + (3 * u));
+    }
+  }
+
+  function fitRoute(animate) {
+    if (mode === 'globe') {
+      var all = [], rot = [-118, 4], gk = 1;
+      S.forEach(function (p) { all.push([p.lon, p.lat]); });
+      legs.forEach(function (l) { l.coords.forEach(function (q) { all.push(q); }); });
+      if (all.length) {
+        var gc = d3.geoCentroid({ type: 'MultiPoint', coordinates: all });
+        if (!isFinite(gc[0]) || !isFinite(gc[1])) gc = all[0];
+        var th = d3.max(all, function (q) { return d3.geoDistance(gc, q); });
+        gk = S.length === 1 || th < 1e-4 ? 6 : (th > 1.15 ? 1 : Math.max(1, Math.min(45, 0.74 / Math.sin(th))));
+        rot = [-gc[0], -gc[1]];
+      }
+      animateCam(rot, gk, animate ? 700 : 0);
+      return;
+    }
+    var pts = [];
+    S.forEach(function (p) { pts.push(projection([p.lon, p.lat])); });
+    legs.forEach(function (l) { l.pts.forEach(function (q) { pts.push(q); }); });
+    var t = d3.zoomIdentity;
+    if (pts.length) {
+      var x0 = d3.min(pts, function (q) { return q[0]; }), x1 = d3.max(pts, function (q) { return q[0]; });
+      var y0 = d3.min(pts, function (q) { return q[1]; }), y1 = d3.max(pts, function (q) { return q[1]; });
+      var k = S.length === 1 ? 7 : Math.min(45, 0.72 / Math.max((x1 - x0) / W, (y1 - y0) / H, 0.0001));
+      k = Math.max(1, k);
+      t = d3.zoomIdentity.translate(W / 2, H / 2).scale(k).translate(-(x0 + x1) / 2, -(y0 + y1) / 2);
+    }
+    if (animate && !reduced) svg.transition().duration(650).call(zoom.transform, t); else svg.call(zoom.transform, t);
+  }
+
+  /* ---------- Angka ---------- */
+  function stayYears(i) { var end = i < S.length - 1 ? S[i + 1].year : Math.max(NOW, S[i].year); return end - S[i].year; }
+  function lifeCenter() {
+    if (S.length < 2) return null;
+    var x = 0, y = 0, z = 0, rad = Math.PI / 180;
+    S.forEach(function (p, i) {
+      var w = Math.max(0.5, stayYears(i)), la = p.lat * rad, lo = p.lon * rad;
+      x += w * Math.cos(la) * Math.cos(lo); y += w * Math.cos(la) * Math.sin(lo); z += w * Math.sin(la);
+    });
+    if (Math.hypot(x, y, z) < 1e-9) return null;
+    var c = { lat: Math.atan2(z, Math.hypot(x, y)) / rad, lon: Math.atan2(y, x) / rad };
+    var best = null, bd = Infinity;
+    CITIES.forEach(function (ct) { var dd = km(c, ct); if (dd < bd) { bd = dd; best = ct; } });
+    c.near = best; c.nearKm = bd;
+    return c;
+  }
+  function totals() {
+    var total = d3.sum(legs, function (l) { return l.km; });
+    var cities = new Set(S.map(function (p) { return p.lat.toFixed(2) + ',' + p.lon.toFixed(2); })).size;
+    var countries = new Set(S.map(function (p) { return p.iso; }).filter(Boolean)).size;
+    return { total: total, cities: cities, countries: countries, span: S.length ? Math.max(NOW, S[S.length - 1].year) - S[0].year : 0 };
+  }
+  var SM_KM = km(cityByName('Sabang'), cityByName('Merauke'));
+
+  function renderStats() {
+    var t = totals(), n = S.length;
+    $('totalKm').textContent = nf.format(Math.round(t.total));
+    var cmp = $('cmp'); cmp.textContent = '';
+    var addCmp = function (big, txt) { cmp.appendChild(h('li', null, h('b', { text: big }), h('span', { text: txt }))); };
+    addCmp(nf1.format(t.total / SM_KM) + '×', 'jarak garis lurus Sabang–Merauke (' + nf.format(Math.round(SM_KM)) + ' km)');
+    addCmp(nf1.format(t.total / 40075 * 100) + '%', 'dari keliling bumi di khatulistiwa (40.075 km)');
+    addCmp(nf.format(Math.ceil(t.total / 40)) + ' hari', 'kalau ditempuh jalan kaki 8 jam sehari');
+
+    var facts = $('facts'); facts.textContent = '';
+    var add = function (dt, dd, small) { facts.appendChild(h('div', null, h('dt', { text: dt }), h('dd', null, dd, small ? h('small', { text: small }) : null))); };
+    if (!n) { add('Belum ada data', 'Tambahkan tempat pertamamu', 'Angka-angka di sini terisi otomatis.'); return; }
+    add('Tempat dan kota', n + ' tempat di ' + t.cities + ' kota', t.countries ? t.countries + ' negara' : null);
+    add('Rentang waktu', S[0].year + '–' + Math.max(NOW, S[n - 1].year), t.span + ' tahun perjalanan');
+    var li = d3.maxIndex(S, function (_, i) { return stayYears(i); });
+    add('Paling lama ditinggali', S[li].name, stayYears(li) + ' tahun' + (li === n - 1 ? ', dan masih berjalan' : ''));
+    if (legs.length) {
+      var far = legs[d3.maxIndex(legs, function (l) { return l.km; })];
+      add('Perpindahan terjauh', far.a.name + ' → ' + far.b.name, nf.format(Math.round(far.km)) + ' km pada ' + far.b.year);
+      var fi = d3.maxIndex(S, function (p) { return km(S[0], p); });
+      add('Terjauh dari ' + S[0].name, S[fi].name, nf.format(Math.round(km(S[0], S[fi]))) + ' km dari titik awal');
+      add('Rata-rata pindah', 'tiap ' + nf1.format(t.span / legs.length) + ' tahun', legs.length + ' kali pindah');
+    }
+    if (center && center.near) add('Pusat hidup', 'dekat ' + center.near.name, 'Titik tengah semua tempat, ditimbang lama tinggal. ' + fmtCoord(center.lat, center.lon));
+  }
+
+  /* ---------- Daftar ---------- */
+  function renderList() {
+    var ol = $('itin'); ol.textContent = '';
+    $('emptyMsg').hidden = S.length > 0;
+    $('btnReset').hidden = S.length === 0;
+    S.forEach(function (p, i) {
+      var end = i < S.length - 1 ? S[i + 1].year : null, yrs = stayYears(i);
+      var meta = CAT[p.cat] + ' · ' + p.year + '–' + (end == null ? 'sekarang' : end) + (yrs > 0 ? ' · ' + yrs + ' tahun' : '');
+      var nameBtn = h('button', { class: 'namebtn', type: 'button', title: 'Lihat di peta', text: p.name });
+      nameBtn.addEventListener('click', function () { focusPlace(p); });
+      var del = h('button', { class: 'del', type: 'button', 'aria-label': 'Hapus ' + p.name, title: 'Hapus' }, '×');
+      del.addEventListener('click', function () { state.places = state.places.filter(function (q) { return q.id !== p.id; }); changed(true); });
+      ol.appendChild(h('li', { class: 'stop' },
+        h('span', { class: 'chip bg-' + p.cat, text: String(i + 1) }),
+        h('div', null, h('div', { class: 'name' }, nameBtn), h('div', { class: 'meta', text: meta }), p.note ? h('div', { class: 'note', text: p.note }) : null),
+        del));
+      if (i < S.length - 1) ol.appendChild(h('li', { class: 'leg', text: '↓ ' + nf.format(Math.round(legs[i].km)) + ' km' }));
+    });
+  }
+
+  function focusPlace(p) {
+    stopPlay(false);
+    viewP = Math.max(0, S.length - 1);
+    if (S.length) { slider.value = slider.max; setCaption(+slider.max, S.length - 1); }
+    if (mode === 'globe') animateCam([-p.lon, -p.lat], Math.max(cam.k, 8), 650);
+    else {
+      var q = projection([p.lon, p.lat]), t = d3.zoomIdentity.translate(W / 2, H / 2).scale(Math.max(T.k, 10)).translate(-q[0], -q[1]);
+      if (reduced) svg.call(zoom.transform, t); else svg.transition().duration(650).call(zoom.transform, t);
+    }
+    mapbox.scrollIntoView({ block: 'nearest', behavior: reduced ? 'auto' : 'smooth' });
+  }
+
+  /* ---------- Linimasa ---------- */
+  var slider = $('yearSlider'), caption = $('caption'), badge = $('yearBadge');
+  function idxForYear(y) { var idx = 0; S.forEach(function (p, i) { if (p.year <= y) idx = i; }); return idx; }
+  function setCaption(y, idx) {
+    caption.textContent = '';
+    if (!S.length) { caption.textContent = 'Tambahkan tempat untuk melihat linimasa.'; badge.hidden = true; return; }
+    var p = S[idx], maxY = +slider.max;
+    caption.appendChild(h('b', { text: (y >= maxY && !playing ? 'Sekarang' : String(y)) }));
+    var txt = ' · di ' + p.name + ' (' + CAT[p.cat].toLowerCase() + ')';
+    if (S[0].cat === 'lahir' && y >= S[0].year) txt += ' · umur ' + (y - S[0].year);
+    caption.appendChild(document.createTextNode(txt));
+    badge.hidden = false; badge.textContent = String(y);
+  }
+  function syncSlider() {
+    if (!S.length) { slider.disabled = true; setCaption(NOW, 0); return; }
+    slider.disabled = S.length < 2;
+    slider.min = S[0].year; slider.max = Math.max(NOW, S[S.length - 1].year); slider.value = slider.max;
+    viewP = S.length - 1; setCaption(+slider.max, S.length - 1);
+  }
+  slider.addEventListener('input', function () {
+    stopPlay(false);
+    var y = +slider.value, idx = idxForYear(y);
+    viewP = idx; setCaption(y, idx); drawOverlay();
+  });
+
+  var btnPlay = $('btnPlay');
+  function stopPlay(finish) {
+    if (!playing) return;
+    playing = false; cancelAnimationFrame(rafId);
+    btnPlay.innerHTML = '&#9654; Putar perjalanan';
+    if (finish) { viewP = S.length - 1; slider.value = slider.max; setCaption(+slider.max, S.length - 1); drawOverlay(); if (mode === 'globe') fitRoute(true); }
+  }
+  function play() {
+    if (playing) { stopPlay(true); return; }
+    if (S.length < 2) return;
+    cancelAnimationFrame(camAnim);
+    var follow = mode === 'globe' && !reduced;
+    if (follow) { cam.rot = [-S[0].lon, -S[0].lat]; cam.k = legK(legs[0]); viewP = 0; applyCam(true); } else fitRoute(false);
+    playing = true; btnPlay.innerHTML = '&#9632; Berhenti';
+    var per = reduced ? 1 : 1300, hold = reduced ? 800 : 450, t0 = performance.now(), n = S.length;
+    var ease = function (f) { return f < 0.5 ? 2 * f * f : 1 - Math.pow(-2 * f + 2, 2) / 2; };
+    (function frame(now) {
+      if (!playing) return;
+      var el = Math.max(0, now - t0), i = Math.floor(el / (per + hold));
+      if (i >= n - 1) { stopPlay(true); return; }
+      var f = Math.min(1, (el - i * (per + hold)) / per), e = ease(f);
+      viewP = i + e;
+      var y = Math.round(S[i].year + (S[i + 1].year - S[i].year) * e);
+      slider.value = y; setCaption(y, f >= 1 ? i + 1 : i);
+      if (follow) {
+        var hl = legs[i].it(e), tk = legK(legs[i]);
+        var dl = ((-hl[0] - cam.rot[0] + 900) % 360) - 180;
+        cam.rot[0] += dl * 0.14; cam.rot[1] += (-hl[1] - cam.rot[1]) * 0.14;
+        cam.k = Math.exp(Math.log(cam.k) + (Math.log(tk) - Math.log(cam.k)) * 0.06);
+        applyCam(true);
+      } else drawOverlay();
+      rafId = requestAnimationFrame(frame);
+    })(t0);
+  }
+  btnPlay.addEventListener('click', play);
+
+  /* ---------- Form ---------- */
+  var cityInput = $('cityInput'), suggest = $('suggest'), formErr = $('formErr'), pickedInfo = $('pickedInfo');
+  var sugItems = [], sugIdx = -1;
+  function closeSuggest() { suggest.hidden = true; cityInput.setAttribute('aria-expanded', 'false'); sugItems = []; sugIdx = -1; }
+  function isoAt(lon, lat) {
+    var offs = [[0, 0], [0.15, 0], [-0.15, 0], [0, 0.15], [0, -0.15], [0.3, 0.3], [-0.3, 0.3], [0.3, -0.3], [-0.3, -0.3]];
+    for (var o = 0; o < offs.length; o++) {
+      var ll = [lon + offs[o][0], lat + offs[o][1]];
+      for (var i = 0; i < features.length; i++) { if (d3.geoContains(features[i], ll)) return /^[A-Z]{3}$/.test(features[i].id) ? features[i].id : null; }
+    }
+    return null;
+  }
+  function isoOf(c) { return c.iso || A3[c.cc] || isoAt(c.lon, c.lat) || c.cc || null; }
+  function choose(c) {
+    picked = { name: c.name, lat: c.lat, lon: c.lon, iso: isoOf(c), fromMap: false };
+    cityInput.value = c.name; closeSuggest();
+    pickedInfo.hidden = false; pickedInfo.textContent = fmtCoord(c.lat, c.lon) + ' · ' + placeLabel(c);
+    drawOverlay();
+  }
+  function showSuggest() {
+    var q = norm(cityInput.value);
+    if (!q) { closeSuggest(); return; }
+    sugItems = searchCities(q, 8); sugIdx = -1;
+    suggest.textContent = '';
+    if (!sugItems.length) {
+      suggest.appendChild(h('li', { text: 'Tidak ditemukan. Tandai titiknya di peta.' }));
+    } else sugItems.forEach(function (c, i) {
+      var lab = placeLabel(c);
+      var twin = sugItems.some(function (o) { return o !== c && o.key === c.key && placeLabel(o) === lab; });
+      if (twin) lab += ' · ' + fmtCoord(c.lat, c.lon);
+      var li = h('li', { role: 'option', id: 'sug' + i }, h('span', { text: c.name }), h('small', { text: lab }));
+      li.addEventListener('mousedown', function (e) { e.preventDefault(); choose(c); });
+      suggest.appendChild(li);
+    });
+    suggest.hidden = false; cityInput.setAttribute('aria-expanded', 'true');
+  }
+  cityInput.addEventListener('input', function () {
+    if (picked && !picked.fromMap) { picked = null; pickedInfo.hidden = true; }
+    if (picked && picked.fromMap) picked.name = cityInput.value.trim();
+    showSuggest();
+  });
+  cityInput.addEventListener('keydown', function (e) {
+    if (suggest.hidden || !sugItems.length) return;
+    if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+      e.preventDefault();
+      sugIdx = (sugIdx + (e.key === 'ArrowDown' ? 1 : -1) + sugItems.length) % sugItems.length;
+      Array.prototype.forEach.call(suggest.children, function (li, i) { li.classList.toggle('on', i === sugIdx); });
+    } else if (e.key === 'Enter') { e.preventDefault(); choose(sugItems[Math.max(0, sugIdx)]); }
+    else if (e.key === 'Escape') closeSuggest();
+  });
+  cityInput.addEventListener('blur', function () { setTimeout(closeSuggest, 120); });
+
+  function setPick(on) {
+    pickMode = on;
+    svg.classed('picking', on); mapbox.classList.toggle('picking', on); $('pickHint').hidden = !on;
+    $('btnPick').textContent = on ? 'Batal menandai di peta' : 'Tidak ada di daftar? Tandai titiknya di peta';
+  }
+  $('btnPick').addEventListener('click', function () {
+    setPick(!pickMode);
+    if (pickMode) mapbox.scrollIntoView({ block: 'nearest', behavior: reduced ? 'auto' : 'smooth' });
+  });
+  svg.on('click', function (e) {
+    if (!pickMode) return;
+    if (dragMoved) { dragMoved = false; return; }
+    var pt = d3.pointer(e, gOver.node()), ll = mode === 'globe' ? gproj.invert(pt) : projection.invert(T.invert(pt));
+    if (!ll || !isFinite(ll[0]) || !isFinite(ll[1]) || Math.abs(ll[1]) > 89) return;
+    picked = { name: cityInput.value.trim(), lat: ll[1], lon: ll[0], iso: isoAt(ll[0], ll[1]), fromMap: true };
+    pickedInfo.hidden = false; pickedInfo.textContent = 'Titik dipilih: ' + fmtCoord(ll[1], ll[0]) + (picked.iso && NEGARA[picked.iso] ? ' · ' + NEGARA[picked.iso] : '');
+    setPick(false); closeSuggest(); drawOverlay();
+    if (!picked.name) cityInput.focus();
+  });
+
+  var showErr = function (m) { formErr.hidden = !m; formErr.textContent = m || ''; };
+  $('addForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var name = cityInput.value.trim(), year = parseInt($('yearInput').value, 10), cat = $('catInput').value, note = $('noteInput').value.trim();
+    var loc = picked;
+    if (!loc) { var c = cityByName(name); if (c) loc = { name: c.name, lat: c.lat, lon: c.lon, iso: isoOf(c) }; }
+    if (!name) return showErr('Isi nama kota atau tempatnya.');
+    if (!loc) return showErr('Kota ini tidak ada di daftar. Pilih dari saran, atau tandai titiknya di peta.');
+    if (!isFinite(year) || year < 1900 || year > NOW) return showErr('Isi tahun antara 1900 dan ' + NOW + '.');
+    if (cat === 'lahir' && !state.example && state.places.some(function (p) { return p.cat === 'lahir'; })) return showErr('Tempat lahir sudah ada. Hapus dulu yang lama kalau ingin menggantinya.');
+    showErr(''); closeSuggest();
+    if (state.example) { state.places = []; state.example = false; }
+    state.places.push({ id: seq++, name: loc.fromMap ? name : loc.name, lat: loc.lat, lon: loc.lon, iso: loc.iso || null, cat: cat, year: year, note: note });
+    picked = null; pickedInfo.hidden = true; cityInput.value = ''; $('noteInput').value = ''; $('yearInput').value = '';
+    $('catInput').value = cat === 'lahir' ? 'sekolah' : cat;
+    changed(true);
+    cityInput.focus();
+  });
+
+  var resetArmed = 0;
+  $('btnReset').addEventListener('click', function () {
+    var b = $('btnReset');
+    if (!resetArmed) { b.textContent = 'Yakin hapus semua?'; resetArmed = setTimeout(function () { resetArmed = 0; b.textContent = 'Hapus semua'; }, 3500); return; }
+    clearTimeout(resetArmed); resetArmed = 0; b.textContent = 'Hapus semua';
+    state.places = []; state.example = false; changed(true);
+  });
+  $('btnClearExample').addEventListener('click', function () { state.places = []; state.example = false; changed(true); cityInput.focus(); });
+
+  $('zIn').addEventListener('click', function () { if (mode === 'globe') animateCam(cam.rot.slice(), Math.min(60, cam.k * 1.7), 250); else svg.transition().duration(reduced ? 0 : 250).call(zoom.scaleBy, 1.7); });
+  $('zOut').addEventListener('click', function () { if (mode === 'globe') animateCam(cam.rot.slice(), Math.max(1, cam.k / 1.7), 250); else svg.transition().duration(reduced ? 0 : 250).call(zoom.scaleBy, 1 / 1.7); });
+  $('zFit').addEventListener('click', function () { fitRoute(true); });
+
+  function changed(animate) {
+    stopPlay(false);
+    rebuild(); save();
+    $('banner').hidden = !state.example || !state.places.length;
+    $('btnCard').disabled = S.length < 2;
+    syncSlider(); renderList(); renderStats(); fitRoute(animate);
+    drawOverlay();
+  }
+
+  /* ---------- Kartu ringkasan ---------- */
+  var dlg = $('cardDlg'), ownerInput = $('ownerInput'), cardImg = $('cardImg');
+  function summaryText() {
+    var t = totals();
+    return (state.owner ? 'Perjalanan hidup ' + state.owner : 'Perjalanan hidupku') + ': ' + S.map(function (p) { return p.name + ' (' + p.year + ')'; }).join(' → ') +
+      '. Total ' + nf.format(Math.round(t.total)) + ' km, ' + t.cities + ' kota, ' + (t.countries || 1) + ' negara, ' + t.span + ' tahun.';
+  }
+  function drawCard() {
+    var CW = 1080, CH = 1350, cv = document.createElement('canvas'); cv.width = CW; cv.height = CH;
+    var ctx = cv.getContext('2d'), t = totals();
+    var disp = '"Bricolage Grotesque", "Trebuchet MS", sans-serif', body = '"Instrument Sans", "Segoe UI", sans-serif', mono = '"JetBrains Mono", Consolas, monospace';
+    ctx.fillStyle = '#0D171A'; ctx.fillRect(0, 0, CW, CH);
+    ctx.textBaseline = 'alphabetic';
+    ctx.fillStyle = '#93A7AD'; ctx.font = '500 26px ' + mono; ctx.fillText('PETA PERJALANAN HIDUP', 60, 96);
+    ctx.fillStyle = '#E8F0F1'; ctx.font = '700 68px ' + disp;
+    ctx.fillText(state.owner ? state.owner : 'Perjalanan hidupku', 60, 176, CW - 120);
+
+    var px = 60, py = 220, pw = 960, ph = 560;
+    var pts = []; S.forEach(function (p) { pts.push(projection([p.lon, p.lat])); }); legs.forEach(function (l) { l.pts.forEach(function (q) { pts.push(q); }); });
+    var x0 = d3.min(pts, function (q) { return q[0]; }), x1 = d3.max(pts, function (q) { return q[0]; }), y0 = d3.min(pts, function (q) { return q[1]; }), y1 = d3.max(pts, function (q) { return q[1]; });
+    var kMin = Math.max(pw / W, ph / H), k = Math.max(kMin, Math.min(45, 0.7 / Math.max((x1 - x0) / pw, (y1 - y0) / ph, 0.0001)));
+    var tx = pw / 2 - k * (x0 + x1) / 2, ty = ph / 2 - k * (y0 + y1) / 2;
+    tx = Math.min(0, Math.max(pw - W * k, tx)); ty = Math.min(0, Math.max(ph - H * k, ty));
+    var isos = new Set(S.map(function (p) { return p.iso; }));
+    ctx.save();
+    ctx.beginPath(); if (ctx.roundRect) ctx.roundRect(px, py, pw, ph, 22); else ctx.rect(px, py, pw, ph); ctx.clip();
+    ctx.fillStyle = '#0F1E22'; ctx.fillRect(px, py, pw, ph);
+    ctx.translate(px + tx, py + ty); ctx.scale(k, k);
+    var cpath = d3.geoPath(projection, ctx);
+    ctx.lineWidth = 0.8 / k; ctx.strokeStyle = '#35494F';
+    features.forEach(function (f) { ctx.beginPath(); cpath(f); ctx.fillStyle = isos.has(f.id) ? '#4A4424' : '#1E3035'; ctx.fill(); ctx.stroke(); });
+    ctx.strokeStyle = '#FF5C8A'; ctx.lineWidth = 5 / k; ctx.lineJoin = 'round'; ctx.lineCap = 'round';
+    legs.forEach(function (l) {
+      ctx.beginPath();
+      l.pts.forEach(function (q, j) { if (j === 0 || Math.abs(q[0] - l.pts[j - 1][0]) > W / 2) ctx.moveTo(q[0], q[1]); else ctx.lineTo(q[0], q[1]); });
+      ctx.stroke();
+    });
+    ctx.restore();
+    ctx.save();
+    ctx.beginPath(); ctx.rect(px, py, pw, ph); ctx.clip();
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    S.forEach(function (p, i) {
+      var q = projection([p.lon, p.lat]), x = px + tx + q[0] * k, y = py + ty + q[1] * k;
+      ctx.beginPath(); ctx.arc(x, y, 19, 0, Math.PI * 2); ctx.fillStyle = CARD_COL[p.cat]; ctx.fill();
+      ctx.lineWidth = 4; ctx.strokeStyle = '#0D171A'; ctx.stroke();
+      ctx.fillStyle = '#0D171A'; ctx.font = '700 20px ' + mono; ctx.fillText(String(i + 1), x, y + 1);
+    });
+    ctx.restore();
+
+    ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
+    var kmTxt = nf.format(Math.round(t.total));
+    ctx.fillStyle = '#FF5C8A'; ctx.font = '700 150px ' + mono; ctx.fillText(kmTxt, 56, 950);
+    var wKm = ctx.measureText(kmTxt).width;
+    ctx.fillStyle = '#93A7AD'; ctx.font = '500 44px ' + mono; ctx.fillText('km', 56 + wKm + 18, 950);
+    ctx.fillStyle = '#E8F0F1'; ctx.font = '500 30px ' + body;
+    ctx.fillText(nf1.format(t.total / SM_KM) + '× Sabang–Merauke  ·  ' + nf1.format(t.total / 40075 * 100) + '% keliling bumi', 60, 1006, CW - 120);
+
+    ctx.strokeStyle = '#27393E'; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(60, 1044); ctx.lineTo(CW - 60, 1044); ctx.stroke();
+    var cols = [[String(t.cities), 'kota'], [String(t.countries || 1), 'negara'], [String(t.span), 'tahun']];
+    cols.forEach(function (c, i) {
+      var x = 60 + i * 320;
+      ctx.fillStyle = '#E8F0F1'; ctx.font = '700 64px ' + mono; ctx.fillText(c[0], x, 1124);
+      ctx.fillStyle = '#93A7AD'; ctx.font = '500 28px ' + body; ctx.fillText(c[1], x + ctx.measureText('').width, 1164);
+    });
+    ctx.fillStyle = '#93A7AD'; ctx.font = '500 27px ' + body;
+    var words = S.map(function (p, i) { return (i ? '→ ' : '') + p.name; }), lines = [''], maxW = CW - 120;
+    words.forEach(function (w) {
+      var cur = lines[lines.length - 1], next = cur ? cur + ' ' + w : w;
+      if (ctx.measureText(next).width > maxW && cur) lines.push(w); else lines[lines.length - 1] = next;
+    });
+    if (lines.length > 2) { lines = lines.slice(0, 2); lines[1] = lines[1] + ' …'; }
+    lines.forEach(function (l, i) { ctx.fillText(l, 60, 1232 + i * 40, maxW); });
+    ctx.fillStyle = '#586C73'; ctx.font = '500 22px ' + mono; ctx.fillText(S[0].year + '–' + Math.max(NOW, S[S.length - 1].year), 60, 1312);
+    try { cardImg.src = cv.toDataURL('image/png'); } catch (e) {}
+  }
+  var cardTimer = 0;
+  function openCard() {
+    if (S.length < 2) return;
+    ownerInput.value = state.owner; $('copyMsg').textContent = ''; $('copyBox').hidden = true;
+    if (dlg.showModal) dlg.showModal(); else dlg.setAttribute('open', '');
+    drawCard();
+    if (document.fonts && document.fonts.load) {
+      Promise.all([document.fonts.load('700 68px "Bricolage Grotesque"'), document.fonts.load('700 64px "JetBrains Mono"'), document.fonts.load('500 30px "Instrument Sans"')]).then(drawCard, function () {});
+    }
+  }
+  $('btnCard').addEventListener('click', openCard);
+  $('btnCloseCard').addEventListener('click', function () { dlg.close ? dlg.close() : dlg.removeAttribute('open'); });
+  dlg.addEventListener('click', function (e) { if (e.target === dlg && dlg.close) dlg.close(); });
+  ownerInput.addEventListener('input', function () {
+    state.owner = ownerInput.value.trim(); save();
+    clearTimeout(cardTimer); cardTimer = setTimeout(drawCard, 250);
+  });
+  $('btnCopy').addEventListener('click', function () {
+    var txt = summaryText(), box = $('copyBox'), msg = $('copyMsg');
+    var fallback = function () { box.hidden = false; box.value = txt; box.focus(); box.select(); msg.textContent = 'Teks dipilih. Tekan Ctrl + C untuk menyalin.'; };
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(txt).then(function () { msg.textContent = 'Tersalin.'; }, fallback); else fallback();
+  });
+
+  if (window.ResizeObserver) new ResizeObserver(function () { renderGlobe(false); drawOverlay(); }).observe(mapbox);
+  var rethemed = function () { renderGlobe(false); };
+  try { window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', rethemed); } catch (e) {}
+  if (window.MutationObserver) new MutationObserver(rethemed).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  $('yearInput').max = NOW;
+  applyModeUI();
+  changed(false);
+  loadWorld(function (ok) {
+    var st = $('cityStatus');
+    st.textContent = ok ? nf.format(CITIES.length + WORLD.length) + ' kota dan kecamatan di seluruh dunia siap dicari.' : 'Daftar kota dunia gagal dimuat. Hanya ' + CITIES.length + ' kota utama yang bisa dicari; tempat lain bisa ditandai di peta.';
+    if (ok && document.activeElement === cityInput && cityInput.value) showSuggest();
+  });
+})();
+</script>
