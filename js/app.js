@@ -54,7 +54,8 @@ const d3 = window.d3, topojson = window.topojson;
     } catch (e) { return false; }
   };
   var save = function () { try { localStorage.setItem(STORE_KEY, JSON.stringify(state)); } catch (e) {} };
-  if (!load()) { state.places = exampleJourney(); state.example = true; }
+  // Contoh perjalanan bukan data pengguna, jadi selalu dibuat ulang supaya ikut versi terbaru.
+  if (!load() || state.example) { state.places = exampleJourney(); state.example = true; }
   var byYear = function (a, b) { return a.year - b.year || a.id - b.id; };
   var sorted = function () { return state.places.filter(isLife).sort(byYear); };
   // Link berisi kode perjalanan teman (#<kode>) langsung dipakai sebagai pembanding.
