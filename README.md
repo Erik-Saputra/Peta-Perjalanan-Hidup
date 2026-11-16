@@ -26,11 +26,19 @@ Untuk GitHub Pages: buka Settings → Pages, pilih branch `main` dan folder `/ (
 
 | File | Keterangan |
 |---|---|
-| `index.html` | Halaman lengkap: HTML, CSS, dan JavaScript dalam satu file. |
-| `kota-dunia.txt` | Data kota. Satu baris per tempat: `nama\|kode negara\|kode provinsi\|lintang\|bujur`, diurutkan dari penduduk terbanyak. |
-| `peta-perjalanan-hidup.html` | Versi yang sama tanpa kerangka `<html>`, dipakai untuk Artifact di claude.ai. |
+| File | Keterangan |
+|---|---|
+| `index.html` | Kerangka halaman dan seluruh markup. |
+| `css/style.css` | Semua gaya, termasuk warna tema terang dan gelap. |
+| `js/app.js` | Aplikasi utama: data perjalanan, peta datar, bola dunia, linimasa, dan formulir. |
+| `js/kota.js` | Daftar kota bawaan, pemuatan kota dunia, dan pencarian. |
+| `js/statistik.js` | Hitungan angka perjalanan (lama tinggal, total, pusat hidup). |
+| `js/kartu.js` | Penggambar kartu ringkasan. |
+| `js/geo.js` | Helper jarak, format angka, dan koordinat. |
+| `data/kota-dunia.txt` | Data kota. Satu baris per tempat: `nama\|kode negara\|kode provinsi\|lintang\|bujur`, diurutkan dari penduduk terbanyak. |
+| `peta-perjalanan-hidup.html` | Markup yang sama tanpa kerangka `<html>`, dipakai untuk Artifact di claude.ai. |
 
-`index.html` dan `peta-perjalanan-hidup.html` berisi kode yang sama. Kalau salah satunya diubah, yang lain perlu disamakan.
+File JavaScript memakai modul ES (`import`/`export`) tanpa proses build. `index.html` dan `peta-perjalanan-hidup.html` berisi markup yang sama; kalau salah satunya diubah, yang lain perlu disamakan.
 
 ## Sumber data dan pustaka
 
